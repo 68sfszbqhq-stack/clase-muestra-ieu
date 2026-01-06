@@ -153,28 +153,38 @@ function syncInterface(state) {
             }
         });
     }
-    else if (phase === 'question') {
+    else if (phase === 'game' || phase === 'question') { // Handle both naming conventions if any
         showScreen('game');
         renderQuestion(questionIdx);
 
-        // Reset local UI for new question if needed
-        if (!document.querySelector('.option-btn.selected')) {
-            // Clean state
+        // Admin View Adjustments
+        if (isAdmin) {
+            // Admin siempre ve la pregunta
+            document.getElementById('q-text').style.fontSize = "2rem";
+            // Ocultar feedback personal en admin
+            document.getElementById('feedback-msg').style.display = 'none';
         }
 
         if (reveal) {
-            // Show correct answer
             showReveal(questionIdx);
         } else {
-            // Wait for answer
-            document.getElementById('correct-answer-reveal').style.display = 'none'; // Hide if reused in game screen
+            // Hide reveal elements
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => {
+                b.classList.remove('disabled');
+                b.style.opacity = "1";
+                b.style.border = "none";
+                // Remove any checkmarks
+                b.innerHTML = questions[questionIdx].options[b.dataset.idx];
+            });
+            document.getElementById('correct-answer-reveal').style.display = 'none';
         }
     }
     else if (phase === 'results') {
         showScreen('results');
         renderChart(questionIdx);
         const q = questions[questionIdx];
-        document.getElementById('correct-text').textContent = q.options[q.correct];
+        document.getElementById('correct-text').innerHTML = `${q.options[q.correct]} ${isAdmin ? '<br><span style="font-size:0.8rem">(Acumulando puntos...)</span>' : ''}`;
     }
     else if (phase === 'final') {
         showScreen('final');
@@ -247,10 +257,31 @@ function enableAdminMode() {
     });
 }
 
+// Ensure Admin Reset clears everything properly
 function adminResetGame() {
-    if (!confirm("¿Reiniciar juego para todos?")) return;
+    if (!confirm("⚠️ ¿REINICIAR TODO? Se borrarán todos los jugadores y puntos.")) return;
+
+    // Nuke Players
+    db.ref('players').remove();
+
+    // Reset State
     db.ref('gameState').set({ phase: 'lobby', questionIdx: 0, reveal: false });
-    db.ref('players').remove(); // Clear players
+
+    alert("Juego Reiniciado. Pide a los alumnos que recarguen su página.");
+}
+
+// Add logout sanity check on load
+if (localStorage.getItem('ieu_playerName')) {
+    // Check if player still exists in DB, otherwise logout
+    if (myPlayerId) {
+        db.ref(`players/${myPlayerId}`).once('value', s => {
+            if (!s.exists()) {
+                localStorage.removeItem('ieu_playerName');
+                localStorage.removeItem('ieu_playerId');
+                location.reload();
+            }
+        });
+    }
 }
 
 function adminNextPhase() {
