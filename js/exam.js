@@ -135,7 +135,7 @@ function syncInterface(state) {
     // Admin UI always shows controls
     if (isAdmin) {
         document.getElementById('admin-controls').style.display = 'flex';
-        updateAdminStats(questionIdx);
+        // updateAdminStats call removed
     }
 
     if (phase === 'lobby') {
