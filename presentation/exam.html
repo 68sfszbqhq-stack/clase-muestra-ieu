@@ -161,6 +161,24 @@
         }
 
         /* --- ADMIN PANEL (SOLO PROFE) --- */
+        body.admin-mode .question-box {
+            font-size: 2.5rem !important;
+            padding: 3rem !important;
+            margin-top: 2rem !important;
+            display: block !important;
+        }
+
+        body.admin-mode #q-text {
+            display: block !important;
+            color: var(--ieu-dark) !important;
+        }
+
+        body.admin-mode .options-grid {
+            /* Opcional: Ocultar botones de respuesta en pantalla de proyección para que no se distraigan o hacerlos más pequeños */
+            opacity: 0.8;
+            transform: scale(0.9);
+        }
+
         #admin-controls {
             position: fixed;
             bottom: 0;

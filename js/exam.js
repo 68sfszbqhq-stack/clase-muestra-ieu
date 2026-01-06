@@ -252,7 +252,8 @@ function showReveal(idx) {
 
 function enableAdminMode() {
     isAdmin = true;
-    alert("Modo Profesor Activado 👨‍🏫");
+    document.body.classList.add('admin-mode'); // Activar estilos de proyección
+    alert("Modo Profesor Activado 👨‍🏫\n\nAsegúrate de estar proyectando esta pantalla.");
     showScreen('lobby');
     document.getElementById('admin-controls').style.display = 'flex';
 
