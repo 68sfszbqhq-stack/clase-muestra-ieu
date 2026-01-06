@@ -174,9 +174,6 @@ function syncInterface(state) {
                 b.style.pointerEvents = 'none'; // No clickable
                 b.style.cursor = 'default';
             });
-            // Asegurar visibilidad total
-            document.getElementById('q-text').style.fontSize = ""; // Restaurar tamaño original/CSS
-            document.getElementById('feedback-msg').style.display = 'block';
             document.getElementById('feedback-msg').textContent = "Proyectando pregunta...";
         }
 
@@ -189,7 +186,6 @@ function syncInterface(state) {
                 // Restaurar visual
                 b.classList.remove('disabled');
                 b.style.opacity = "1";
-                b.style.border = "none";
                 b.innerHTML = questions[questionIdx].options[b.dataset.idx];
                 // Si es admin, mantener desactivado el click
                 if (isAdmin) b.style.pointerEvents = 'none';
