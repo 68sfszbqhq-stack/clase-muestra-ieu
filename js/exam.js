@@ -64,10 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
         enableAdminMode();
     }
 
-    // Auto-login check
+    // Auto-fill name if exists, but DO NOT auto-join to allow name correction
     if (myName && !isAdmin) {
         document.getElementById('playerName').value = myName;
-        // Optional: Auto join? Better let them click to confirm
     }
 
     // LISTENER GLOBAL DE ESTADO DE JUEGO
@@ -136,6 +135,12 @@ function syncInterface(state) {
     }
 
     if (phase === 'lobby') {
+        // If I am NOT logged in (and not admin), stay in login screen
+        if (!myPlayerId && !isAdmin) {
+            showScreen('login');
+            return;
+        }
+
         showScreen('lobby');
         // Listen for players count
         db.ref('players').on('value', (snap) => {
