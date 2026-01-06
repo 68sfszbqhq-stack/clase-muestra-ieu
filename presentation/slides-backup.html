@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación - Clase Muestra IEU</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/presentation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="presentation-container">
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="slide-counter" id="slideCounter">1 / 10</span>
+            <button class="nav-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Slides Container -->
+        <div class="slides-wrapper" id="slidesWrapper">
+
+            <!-- Slide 1: Title -->
+            <div class="slide active" data-slide="1">
+                <div class="slide-content title-slide">
+                    <div class="logo-badge">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h1 class="slide-title">Bienvenidos</h1>
+                    <h2 class="slide-subtitle">Clase Muestra Interactiva</h2>
+                    <p class="institution">Instituto de Estudios Universitarios</p>
+                    <div class="slide-footer">
+                        <p>Presiona <kbd>→</kbd> o toca para continuar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Introduction -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Objetivos de la Sesión</h2>
+                    <ul class="slide-list">
+                        <li class="fragment">📚 Comprender los conceptos fundamentales</li>
+                        <li class="fragment">💡 Aplicar conocimientos prácticos</li>
+                        <li class="fragment">🎯 Resolver casos reales</li>
+                        <li class="fragment">🤝 Participar activamente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 3: Content Example -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Concepto Principal</h2>
+                    <div class="content-box">
+                        <p class="slide-text">
+                            Este es un espacio para el contenido principal de tu presentación.
+                            Puedes incluir texto, imágenes, gráficos o cualquier elemento que necesites.
+                        </p>
+                    </div>
+                    <div class="highlight-box">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <p><strong>Punto clave:</strong> Adapta este contenido al tema de tu clase</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Two Columns -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Comparación</h2>
+                    <div class="two-columns">
+                        <div class="column">
+                            <h3><i class="fa-solid fa-check-circle"></i> Ventajas</h3>
+                            <ul>
+                                <li>Fácil de usar</li>
+                                <li>Responsive design</li>
+                                <li>Interactivo</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3><i class="fa-solid fa-info-circle"></i> Características</h3>
+                            <ul>
+                                <li>Navegación fluida</li>
+                                <li>Branding IEU</li>
+                                <li>Mobile-friendly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Interactive Poll -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Pregunta Interactiva</h2>
+                    <p class="slide-text">¿Cuál es tu expectativa principal de esta clase?</p>
+                    <div class="poll-options">
+                        <button class="poll-btn" onclick="selectPoll(this)">
+                            <i class="fa-solid fa-book"></i> Aprender teoría
+                        </button>
+                        <button class="poll-btn" onclick="selectPoll(this)">
+                            <i class="fa-solid fa-hands"></i> Práctica
+                        </button>
+                        <button class="poll-btn" onclick="selectPoll(this)">
+                            <i class="fa-solid fa-users"></i> Networking
+                        </button>
+                        <button class="poll-btn" onclick="selectPoll(this)">
+                            <i class="fa-solid fa-certificate"></i> Certificación
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Statistics -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Datos Importantes</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">95%</div>
+                            <div class="stat-label">Éxito</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1000+</div>
+                            <div class="stat-label">Estudiantes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Programas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Quote -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content center-slide">
+                    <blockquote class="quote-block">
+                        <i class="fa-solid fa-quote-left quote-icon"></i>
+                        <p class="quote-text">
+                            "La educación es el arma más poderosa que puedes usar para cambiar el mundo"
+                        </p>
+                        <cite class="quote-author">— Nelson Mandela</cite>
+                    </blockquote>
+                </div>
+            </div>
+
+            <!-- Slide 8: Process Steps -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Proceso de Aprendizaje</h2>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h3>Observar</h3>
+                            <p>Analiza el contenido</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h3>Practicar</h3>
+                            <p>Aplica lo aprendido</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h3>Dominar</h3>
+                            <p>Perfecciona tus habilidades</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Call to Action -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content center-slide">
+                    <h2 class="slide-heading">¿Listo para el Examen?</h2>
+                    <p class="slide-text">Ahora pondremos a prueba lo aprendido</p>
+                    <div class="cta-buttons">
+                        <a href="exam.html" class="btn-primary btn-large">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                            Comenzar Examen
+                        </a>
+                    </div>
+                    <p class="slide-text small">Podrás responder desde tu móvil</p>
+                </div>
+            </div>
+
+            <!-- Slide 10: Thank You -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content title-slide">
+                    <div class="logo-badge success">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <h1 class="slide-title">¡Gracias!</h1>
+                    <h2 class="slide-subtitle">Esperamos que hayas disfrutado la clase</h2>
+                    <p class="institution">Instituto de Estudios Universitarios</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Home Button -->
+        <a href="../index.html" class="home-btn" title="Volver al inicio">
+            <i class="fa-solid fa-home"></i>
+        </a>
+    </div>
+
+    <script src="../js/presentation.js"></script>
+</body>
+
+</html>

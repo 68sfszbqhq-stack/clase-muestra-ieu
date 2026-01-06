@@ -1,7 +1,7 @@
 // Presentation Navigation Logic - IEU
 
 let currentSlide = 1;
-const totalSlides = 10;
+const totalSlides = 15;
 
 // DOM Elements
 const slidesWrapper = document.getElementById('slidesWrapper');
@@ -21,20 +21,20 @@ function init() {
 // Navigate to specific slide
 function goToSlide(slideNumber) {
     if (slideNumber < 1 || slideNumber > totalSlides) return;
-    
+
     const currentSlideEl = document.querySelector('.slide.active');
     const nextSlideEl = slides[slideNumber - 1];
-    
+
     if (currentSlideEl) {
         currentSlideEl.classList.add('exiting');
         setTimeout(() => {
             currentSlideEl.classList.remove('active', 'exiting');
         }, 500);
     }
-    
+
     nextSlideEl.classList.add('active');
     currentSlide = slideNumber;
-    
+
     updateCounter();
     updateProgress();
 }
@@ -112,7 +112,7 @@ slidesWrapper.addEventListener('touchend', (e) => {
 function handleSwipe() {
     const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
-    
+
     if (Math.abs(diff) > swipeThreshold) {
         if (diff > 0) {
             nextSlide(); // Swipe left
@@ -127,7 +127,7 @@ function selectPoll(button) {
     const allPollBtns = document.querySelectorAll('.poll-btn');
     allPollBtns.forEach(btn => btn.classList.remove('selected'));
     button.classList.add('selected');
-    
+
     // Optional: Add confetti or celebration animation
     setTimeout(() => {
         button.style.animation = 'none';
@@ -150,7 +150,7 @@ Home = Primer slide
 End = Último slide
 
 ¡Buena presentación!
-`, 
-'font-size: 24px; font-weight: bold; color: #FF6B35;',
-'font-size: 14px; color: #1D1D1D;'
+`,
+    'font-size: 24px; font-weight: bold; color: #FF6B35;',
+    'font-size: 14px; color: #1D1D1D;'
 );

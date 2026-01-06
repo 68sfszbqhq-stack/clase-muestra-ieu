@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentación - Clase Muestra IEU</title>
+    <title>Periodización del Entrenamiento - IEU</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/presentation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +15,7 @@
         <!-- Navigation Controls -->
         <div class="nav-controls">
             <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-            <span class="slide-counter" id="slideCounter">1 / 10</span>
+            <span class="slide-counter" id="slideCounter">1 / 15</span>
             <button class="nav-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
@@ -27,184 +27,436 @@
         <!-- Slides Container -->
         <div class="slides-wrapper" id="slidesWrapper">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: Título Principal (30 seg) -->
             <div class="slide active" data-slide="1">
                 <div class="slide-content title-slide">
                     <div class="logo-badge">
-                        <i class="fa-solid fa-graduation-cap"></i>
+                        <i class="fa-solid fa-dumbbell"></i>
                     </div>
-                    <h1 class="slide-title">Bienvenidos</h1>
-                    <h2 class="slide-subtitle">Clase Muestra Interactiva</h2>
+                    <h1 class="slide-title" style="font-size: 2.8rem;">Periodización del Entrenamiento Deportivo</h1>
+                    <h2 class="slide-subtitle">Modelos Contemporáneos y Técnica en Función de las Características
+                        Deportivas</h2>
                     <p class="institution">Instituto de Estudios Universitarios</p>
+                    <p class="institution" style="font-size: 1rem; margin-top: 1rem;">
+                        Licenciatura en Ciencias del Deporte de Alto Rendimiento
+                    </p>
                     <div class="slide-footer">
-                        <p>Presiona <kbd>→</kbd> o toca para continuar</p>
+                        <p>Presiona <kbd>→</kbd> para continuar</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 2: Introduction -->
+            <!-- Slide 2: Presentación Personal (2.5 min) -->
             <div class="slide" data-slide="2">
                 <div class="slide-content">
-                    <h2 class="slide-heading">Objetivos de la Sesión</h2>
-                    <ul class="slide-list">
-                        <li class="fragment">📚 Comprender los conceptos fundamentales</li>
-                        <li class="fragment">💡 Aplicar conocimientos prácticos</li>
-                        <li class="fragment">🎯 Resolver casos reales</li>
-                        <li class="fragment">🤝 Participar activamente</li>
+                    <h2 class="slide-heading">Presentación</h2>
+                    <div class="content-box" style="text-align: center; padding: 3rem;">
+                        <i class="fa-solid fa-user-tie"
+                            style="font-size: 3.5rem; color: var(--ieu-orange); margin-bottom: 1.5rem;"></i>
+                        <h3 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--ieu-dark);">
+                            [Tu Nombre Completo]
+                        </h3>
+                        <p style="font-size: 1.2rem; color: #666; margin-bottom: 0.8rem;">
+                            📚 <strong>Grado Académico:</strong> [Maestría/Doctorado en...]
+                        </p>
+                        <p style="font-size: 1.2rem; color: #666; margin-bottom: 0.8rem;">
+                            🎓 <strong>Especialización:</strong> [Área de especialización]
+                        </p>
+                        <p style="font-size: 1.2rem; color: #666; margin-bottom: 0.8rem;">
+                            💼 <strong>Ocupación:</strong> [Entrenador/Preparador Físico/Investigador]
+                        </p>
+                        <p style="font-size: 1.2rem; color: #666;">
+                            🏆 <strong>Experiencia:</strong> [Años de experiencia y logros relevantes]
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Objetivos y Encuadre (3 min TOTAL hasta aquí) -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Encuadre y Objetivos</h2>
+                    <div class="content-box" style="background: #FFF5F2; border-left: 5px solid var(--ieu-orange);">
+                        <p class="slide-text" style="font-size: 1.3rem;">
+                            <strong>Bienvenidos a la sesión sobre la evolución de la planificación deportiva.</strong>
+                            En el alto rendimiento moderno, la competencia ya no es un evento aislado, sino un
+                            <strong>sistema dinámico y comercializado</strong>.
+                        </p>
+                    </div>
+                    <div class="highlight-box" style="margin-top: 2rem;">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <p><strong>Objetivo:</strong> Analizar y comparar los modelos contemporáneos de periodización
+                            (Bloques, ATR, Multicíclico) y determinar cómo la técnica específica debe adaptarse según
+                            las características de cada deporte.</p>
+                    </div>
+                    <div class="content-box" style="margin-top: 2rem; background: #FFF9E6;">
+                        <p style="font-size: 1.2rem; color: var(--ieu-dark);">
+                            <strong>💭 Pregunta Constructivista:</strong><br>
+                            <em>"Si tuvieran un nadador que debe competir en 5 copas mundiales en 3 meses, ¿utilizarían
+                                el modelo clásico de Matveev de una sola cima? ¿Por qué?"</em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Introducción al Tema (2 min - TOTAL 5 min) -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Evolución de la Periodización</h2>
+                    <div class="content-box">
+                        <p class="slide-text">
+                            <strong>Dantas et al. (2022) en Retos:</strong> "La periodización es un sistema metodológico
+                            que distribuye los contenidos de entrenamiento según disponibilidad de recursos y principios
+                            científicos."
+                        </p>
+                    </div>
+                    <div class="two-columns" style="margin-top: 2rem;">
+                        <div class="column">
+                            <h3><i class="fa-solid fa-timeline"></i> Evolución Histórica</h3>
+                            <ul>
+                                <li><strong>Antigua Grecia:</strong> Primeros ciclos</li>
+                                <li><strong>1950s:</strong> Matveev (modelo clásico)</li>
+                                <li><strong>1980s:</strong> Verkhoshansky (bloques)</li>
+                                <li><strong>2000s:</strong> Modelos contemporáneos</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3><i class="fa-solid fa-trophy"></i> Contexto Actual</h3>
+                            <ul>
+                                <li>Deporte profesionalizado</li>
+                                <li>Múltiples competencias/año</li>
+                                <li>Alto nivel comercial</li>
+                                <li>Necesidad de flexibilidad</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: El Legado de Matveev (2.5 min - TOTAL 7.5 min) -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Modelo Clásico de Matveev</h2>
+                    <div class="highlight-box">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <p><strong>Lev Pavlovich Matveev (1958):</strong> Diseñado para los Juegos Olímpicos,
+                            enfocándose en <strong>una sola gran cima</strong> de rendimiento cada 4 años.</p>
+                    </div>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h3>Preparatorio</h3>
+                            <p>General → Específico<br>↑ Volumen<br>↓ Intensidad</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h3>Competitivo</h3>
+                            <p>Pico de forma<br>↓ Volumen<br>↑ Intensidad</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h3>Transitorio</h3>
+                            <p>Recuperación<br>Activa/Pasiva<br>Regeneración</p>
+                        </div>
+                    </div>
+                    <p class="slide-text" style="margin-top: 2rem; text-align: center;">
+                        <strong>Principio fundamental:</strong> "El deportista NO puede estar siempre en forma máxima"
+                    </p>
+                </div>
+            </div>
+
+            <!-- Slide 6: Limitaciones del Modelo Clásico (2 min - TOTAL 9.5 min) -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2 class="slide-heading">¿Por qué Evolucionó?</h2>
+                    <div class="two-columns">
+                        <div class="column" style="background: #fff5f5;">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Limitaciones Clásicas</h3>
+                            <ul>
+                                <li><strong>1 pico/año:</strong> Insuficiente hoy</li>
+                                <li><strong>Largo preparatorio:</strong> Pérdida económica</li>
+                                <li><strong>Desarrollo simultáneo:</strong> Menos eficiente</li>
+                                <li><strong>Poca flexibilidad:</strong> Calendarios dinámicos</li>
+                            </ul>
+                        </div>
+                        <div class="column" style="background: #f0fff4;">
+                            <h3><i class="fa-solid fa-rocket"></i> Demandas Actuales</h3>
+                            <ul>
+                                <li><strong>Múltiples competencias:</strong> 5-10 picos/año</li>
+                                <li><strong>Comercialización:</strong> Contratos y sponsors</li>
+                                <li><strong>Medios:</strong> Exposición constante</li>
+                                <li><strong>Ciencia:</strong> Nuevos conocimientos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Modelo de Bloques - Verkhoshansky (2.5 min - TOTAL 12 min) -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Modelo de Bloques (Verkhoshansky)</h2>
+                    <div class="highlight-box">
+                        <i class="fa-solid fa-cube"></i>
+                        <p><strong>Yuri Verkhoshansky (1980):</strong> Ideal para deportes de <strong>fuerza
+                                explosiva</strong>. Cargas concentradas en bloques de 2-3 meses para generar picos
+                            sucesivos.</p>
+                    </div>
+                    <div class="content-box" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-layer-group"></i> Características</h3>
+                        <ul class="slide-list" style="font-size: 1.2rem;">
+                            <li class="fragment">✅ Concentración de cargas específicas por bloque</li>
+                            <li class="fragment">✅ Desarrollo secuencial de capacidades</li>
+                            <li class="fragment">✅ Múltiples picos competitivos posibles</li>
+                            <li class="fragment">✅ Intensidad predomina sobre volumen</li>
+                        </ul>
+                    </div>
+                    <p class="slide-text" style="margin-top: 1.5rem; text-align: center;">
+                        <strong>Aplicación:</strong> Halterofilia, lanzamientos, saltos, velocidad pura
+                    </p>
+                </div>
+            </div>
+
+            <!-- Slide 8: Modelo ATR (2.5 min - TOTAL 14.5 min) -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Modelo ATR (Issurin/Kaverin)</h2>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-arrow-up"></i></div>
+                            <h3>Acumulación</h3>
+                            <p>Volumen alto<br>Capacidades básicas<br>2-4 semanas</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-exchange-alt"></i></div>
+                            <h3>Transformación</h3>
+                            <p>Intensidad específica<br>Habilidades técnicas<br>2-3 semanas</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-star"></i></div>
+                            <h3>Realización</h3>
+                            <p>Pico de forma<br>Competencia<br>1-2 semanas</p>
+                        </div>
+                    </div>
+                    <div class="highlight-box" style="margin-top: 2rem;">
+                        <i class="fa-solid fa-medal"></i>
+                        <p><strong>Estándar Internacional:</strong> Calendarios con múltiples picos (natación, tenis,
+                            atletismo). Usado por medallistas olímpicos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Modelo Multicíclico (2 min - TOTAL 16.5 min) -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Modelo Multicíclico (Platonov)</h2>
+                    <div class="content-box">
+                        <p class="slide-text">
+                            <strong>Vladimir Platonov:</strong> Diseñado para la <strong>longevidad del atleta de
+                                élite</strong>, manteniendo resultados a lo largo de varios ciclos olímpicos (8-12
+                            años).
+                        </p>
+                    </div>
+                    <div class="two-columns" style="margin-top: 2rem;">
+                        <div class="column">
+                            <h3><i class="fa-solid fa-infinity"></i> Características</h3>
+                            <ul>
+                                <li>Múltiples macrociclos/año</li>
+                                <li>3-4 picos competitivos</li>
+                                <li>Prevención de burnout</li>
+                                <li>Desarrollo continuo</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3><i class="fa-solid fa-users-gear"></i> Aplicación</h3>
+                            <ul>
+                                <li>Atletas élite senior</li>
+                                <li>Deportes con calendario extenso</li>
+                                <li>Ligas profesionales</li>
+                                <li>Carrera deportiva larga</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Técnica según Deporte (3 min - TOTAL 19.5 min) -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Técnica según Características del Deporte</h2>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-repeat"></i></div>
+                            <h3>Cíclicos</h3>
+                            <p><strong>Natación, Carrera</strong><br>Economía de esfuerzo<br>Eficiencia
+                                energética<br>Movimiento repetitivo</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-hand-fist"></i></div>
+                            <h3>Acíclicos/Combate</h3>
+                            <p><strong>Boxeo, Lucha</strong><br>Técnica variable<br>Adaptación instantánea<br>Reflexiva
+                            </p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number"><i class="fa-solid fa-users"></i></div>
+                            <h3>Colectivos</h3>
+                            <p><strong>Fútbol, Basket</strong><br>Técnico-táctico<br>Precisión contextual<br>Situacional
+                            </p>
+                        </div>
+                    </div>
+                    <div class="highlight-box" style="margin-top: 2rem;">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <p><strong>Principio clave:</strong> "No existe técnica óptima universal". La técnica debe
+                            adaptarse a las particularidades físicas y psicológicas del sujeto.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Técnica e Individualización (2.5 min - TOTAL 22 min) -->
+            <div class="slide" data-slide="11">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Individualización Técnica</h2>
+                    <div class="content-box">
+                        <p class="slide-text" style="font-size: 1.3rem;">
+                            <strong>Ejemplo:</strong> Si un gimnasta no tiene fuerza suficiente, su técnica se
+                            <strong>deteriorará</strong> para compensar esa debilidad.
+                        </p>
+                    </div>
+                    <div class="two-columns" style="margin-top: 2rem;">
+                        <div class="column">
+                            <h3><i class="fa-solid fa-swimmer"></i> Caso: Natación</h3>
+                            <p style="line-height: 1.8;">
+                                • <strong>Fase Acumulación:</strong> Perfeccionar brazada<br>
+                                • <strong>Transformación:</strong> Técnica bajo fatiga<br>
+                                • <strong>Realización:</strong> Máxima economía + velocidad
+                            </p>
+                        </div>
+                        <div class="column">
+                            <h3><i class="fa-solid fa-dumbbell"></i> Caso: Halterofilia</h3>
+                            <p style="line-height: 1.8;">
+                                • <strong>Bloques Fuerza:</strong> Potencia base<br>
+                                • <strong>Bloques Técnica:</strong> Precisión arrancada<br>
+                                • <strong>Pico:</strong> Sincronización perfecta
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 12: Relación Técnica-Táctica (2 min - TOTAL 24 min) -->
+            <div class="slide" data-slide="12">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Relación Técnica-Táctica</h2>
+                    <div class="content-box" style="background: #FFF5F2;">
+                        <p class="slide-text" style="font-size: 1.3rem;">
+                            En deportes de equipo, el gesto técnico <strong>no existe solo</strong>; se convierte en una
+                            <strong>acción técnico-táctica</strong> donde la precisión depende de la situación de juego.
+                        </p>
+                    </div>
+                    <div class="stats-grid" style="margin-top: 2rem;">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-futbol"
+                                style="font-size: 3rem; color: var(--ieu-orange); margin-bottom: 1rem;"></i>
+                            <div class="stat-label">Pase en Contexto</div>
+                            <p style="font-size: 1rem; color: #666; margin-top: 0.5rem;">Presión, espacio, tiempo</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-basketball"
+                                style="font-size: 3rem; color: var(--ieu-orange); margin-bottom: 1rem;"></i>
+                            <div class="stat-label">Tiro Variables</div>
+                            <p style="font-size: 1rem; color: #666; margin-top: 0.5rem;">Defensa, distancia, fatiga</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-volleyball"
+                                style="font-size: 3rem; color: var(--ieu-orange); margin-bottom: 1rem;"></i>
+                            <div class="stat-label">Remate Situacional</div>
+                            <p style="font-size: 1rem; color: #666; margin-top: 0.5rem;">Bloqueo, ángulo, velocidad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Síntesis y Aplicación (2 min - TOTAL 26 min) -->
+            <div class="slide" data-slide="13">
+                <div class="slide-content">
+                    <h2 class="slide-heading">Síntesis: No Hay Modelo Perfecto</h2>
+                    <div class="content-box" style="background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%);">
+                        <p class="slide-text" style="font-size: 1.3rem;">
+                            La periodización moderna <strong>no es una receta fija</strong>, sino un <strong>sistema
+                                flexible</strong> que utiliza modelos como ATR o Bloques para responder a las demandas
+                            del calendario internacional, siempre priorizando una técnica <strong>individualizada y
+                                específica</strong>.
+                        </p>
+                    </div>
+                    <ul class="slide-list" style="margin-top: 2rem;">
+                        <li class="fragment">✅ <strong>Contexto deportivo:</strong> Define el modelo apropiado</li>
+                        <li class="fragment">⚙️ <strong>Calendario competitivo:</strong> Determina picos necesarios</li>
+                        <li class="fragment">🎯 <strong>Características del deporte:</strong> Guía la técnica</li>
+                        <li class="fragment">👤 <strong>Individualización:</strong> Clave del éxito</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Slide 3: Content Example -->
-            <div class="slide" data-slide="3">
-                <div class="slide-content">
-                    <h2 class="slide-heading">Concepto Principal</h2>
-                    <div class="content-box">
-                        <p class="slide-text">
-                            Este es un espacio para el contenido principal de tu presentación.
-                            Puedes incluir texto, imágenes, gráficos o cualquier elemento que necesites.
+            <!-- Slide 14: Actividad de Logro (1.5 min - TOTAL 27.5 min) -->
+            <div class="slide" data-slide="14">
+                <div class="slide-content center-slide">
+                    <h2 class="slide-heading">Actividad de Logro</h2>
+                    <div class="content-box" style="max-width: 800px; margin: 0 auto; background: #FFF9E6;">
+                        <p style="font-size: 1.5rem; color: var(--ieu-dark); margin-bottom: 2rem;">
+                            <strong>Caso Práctico:</strong>
+                        </p>
+                        <p style="font-size: 1.3rem; line-height: 1.8;">
+                            Atleta de <strong>Halterofilia élite</strong> (deporte de fuerza rápida) con competencia
+                            importante en <strong>8 semanas</strong>.
+                        </p>
+                        <p style="font-size: 1.4rem; color: var(--ieu-orange); margin: 2rem 0;">
+                            <strong>¿Qué modelo elegirían y en qué aspecto técnico se enfocarían?</strong>
                         </p>
                     </div>
-                    <div class="highlight-box">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        <p><strong>Punto clave:</strong> Adapta este contenido al tema de tu clase</p>
+                    <div class="highlight-box" style="max-width: 800px; margin: 2rem auto;">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <p><strong>Respuesta esperada:</strong> Modelo de Bloques o ATR (cargas concentradas) con
+                            enfoque en potencia y precisión de la "fase de arrancada".</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 4: Two Columns -->
-            <div class="slide" data-slide="4">
+            <!-- Slide 15: Referencias y Cierre (0.5 min - TOTAL 28 min) -->
+            <div class="slide" data-slide="15">
                 <div class="slide-content">
-                    <h2 class="slide-heading">Comparación</h2>
-                    <div class="two-columns">
-                        <div class="column">
-                            <h3><i class="fa-solid fa-check-circle"></i> Ventajas</h3>
-                            <ul>
-                                <li>Fácil de usar</li>
-                                <li>Responsive design</li>
-                                <li>Interactivo</li>
-                            </ul>
-                        </div>
-                        <div class="column">
-                            <h3><i class="fa-solid fa-info-circle"></i> Características</h3>
-                            <ul>
-                                <li>Navegación fluida</li>
-                                <li>Branding IEU</li>
-                                <li>Mobile-friendly</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 5: Interactive Poll -->
-            <div class="slide" data-slide="5">
-                <div class="slide-content">
-                    <h2 class="slide-heading">Pregunta Interactiva</h2>
-                    <p class="slide-text">¿Cuál es tu expectativa principal de esta clase?</p>
-                    <div class="poll-options">
-                        <button class="poll-btn" onclick="selectPoll(this)">
-                            <i class="fa-solid fa-book"></i> Aprender teoría
-                        </button>
-                        <button class="poll-btn" onclick="selectPoll(this)">
-                            <i class="fa-solid fa-hands"></i> Práctica
-                        </button>
-                        <button class="poll-btn" onclick="selectPoll(this)">
-                            <i class="fa-solid fa-users"></i> Networking
-                        </button>
-                        <button class="poll-btn" onclick="selectPoll(this)">
-                            <i class="fa-solid fa-certificate"></i> Certificación
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 6: Statistics -->
-            <div class="slide" data-slide="6">
-                <div class="slide-content">
-                    <h2 class="slide-heading">Datos Importantes</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number">95%</div>
-                            <div class="stat-label">Éxito</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">1000+</div>
-                            <div class="stat-label">Estudiantes</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">50+</div>
-                            <div class="stat-label">Programas</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 7: Quote -->
-            <div class="slide" data-slide="7">
-                <div class="slide-content center-slide">
-                    <blockquote class="quote-block">
-                        <i class="fa-solid fa-quote-left quote-icon"></i>
-                        <p class="quote-text">
-                            "La educación es el arma más poderosa que puedes usar para cambiar el mundo"
+                    <h2 class="slide-heading">Referencias Bibliográficas</h2>
+                    <div class="content-box" style="padding: 1.5rem; line-height: 1.6; font-size: 1rem;">
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>1.</strong> Dantas, E.H.M., et al. (2022). Criteria for identifying and assessing
+                            sports training periodization models. <em>Retos, 45</em>, 174-183.
                         </p>
-                        <cite class="quote-author">— Nelson Mandela</cite>
-                    </blockquote>
-                </div>
-            </div>
-
-            <!-- Slide 8: Process Steps -->
-            <div class="slide" data-slide="8">
-                <div class="slide-content">
-                    <h2 class="slide-heading">Proceso de Aprendizaje</h2>
-                    <div class="steps-container">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <h3>Observar</h3>
-                            <p>Analiza el contenido</p>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <h3>Practicar</h3>
-                            <p>Aplica lo aprendido</p>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <h3>Dominar</h3>
-                            <p>Perfecciona tus habilidades</p>
-                        </div>
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>2.</strong> Bompa, T.O. Periodización: Teoría y Metodología del Entrenamiento.
+                            Editorial Hispano Europea.
+                        </p>
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>3.</strong> Matveev, L.P. (2001). Teoría General del Entrenamiento Deportivo.
+                            Editorial Paidotribo.
+                        </p>
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>4.</strong> Verkhoshansky, Y. (2005). Planning and Organization of Sports Training.
+                            Moscow.
+                        </p>
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>5.</strong> Issurin, V. (2016). Benefits and Limitations of Block Periodized
+                            Training. <em>Sports Medicine</em>.
+                        </p>
+                        <p style="margin-bottom: 0.8rem;">
+                            <strong>6.</strong> Platonov, V. (1984). El Entrenamiento deportivo. Teoría y Metodología.
+                            Editorial Paidotribo.
+                        </p>
                     </div>
-                </div>
-            </div>
-
-            <!-- Slide 9: Call to Action -->
-            <div class="slide" data-slide="9">
-                <div class="slide-content center-slide">
-                    <h2 class="slide-heading">¿Listo para el Examen?</h2>
-                    <p class="slide-text">Ahora pondremos a prueba lo aprendido</p>
-                    <div class="cta-buttons">
-                        <a href="exam.html" class="btn-primary btn-large">
-                            <i class="fa-solid fa-clipboard-question"></i>
-                            Comenzar Examen
-                        </a>
-                    </div>
-                    <p class="slide-text small">Podrás responder desde tu móvil</p>
-                </div>
-            </div>
-
-            <!-- Slide 10: Thank You -->
-            <div class="slide" data-slide="10">
-                <div class="slide-content title-slide">
-                    <div class="logo-badge success">
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <h1 class="slide-title">¡Gracias!</h1>
-                    <h2 class="slide-subtitle">Esperamos que hayas disfrutado la clase</h2>
-                    <p class="institution">Instituto de Estudios Universitarios</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fa-brands fa-linkedin"></i></a>
+                    <div class="highlight-box" style="margin-top: 1.5rem; text-align: center;">
+                        <i class="fa-solid fa-music"></i>
+                        <p><strong>Analogía Final:</strong> "Planificar el entrenamiento es como dirigir una orquesta
+                            internacional: cada instrumento (técnica) debe estar afinado según su partitura (deporte),
+                            pero el director (entrenador) decide cuándo entra cada sección según el ritmo de la obra
+                            (periodización)."</p>
                     </div>
                 </div>
             </div>
