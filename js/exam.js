@@ -200,20 +200,70 @@ function syncInterface(state) {
     else if (phase === 'results') {
         showScreen('results');
         renderChart(questionIdx);
+
+        // Forzar visibilidad del bloque de respuesta y explicación
+        const revealAndExplainBox = document.getElementById('correct-answer-reveal');
+        revealAndExplainBox.style.display = 'block';
+        revealAndExplainBox.classList.remove('hidden');
+
         const q = questions[questionIdx];
         document.getElementById('correct-text').innerHTML = `
-            ${q.options[q.correct]} 
-            ${isAdmin ? '<br><span style="font-size:0.8rem">(Acumulando puntos...)</span>' : ''}
-            <div style="margin-top: 1rem; font-size: 1.1rem; color: #555; font-weight: normal; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+            <div style="font-size: 1.5rem; margin-bottom: 1rem;">✅ ${q.options[q.correct]}</div>
+            <div style="font-size: 1.2rem; color: #444; font-weight: normal; padding: 15px; background: #FFF9C4; border-left: 5px solid #FBC02D; border-radius: 8px; text-align: left;">
                 ${q.explanation}
             </div>
         `;
+
+        // Mostrar Leaderboard Parcial (Top 5)
+        renderPartialLeaderboard();
     }
     else if (phase === 'final') {
         showScreen('final');
         renderPodium();
     }
 }
+
+
+function renderPartialLeaderboard() {
+    // Buscar o crear contenedor para el leaderboard parcial
+    let partialContainer = document.getElementById('partial-leaderboard');
+    if (!partialContainer) {
+        partialContainer = document.createElement('div');
+        partialContainer.id = 'partial-leaderboard';
+        partialContainer.style.marginTop = "2rem";
+        partialContainer.style.width = "100%";
+        document.getElementById('screen-results').appendChild(partialContainer);
+    }
+
+    partialContainer.innerHTML = '<h3 style="color:#666; font-size:1.2rem; margin-bottom:1rem;">🏆 Top 5 Actual</h3>';
+
+    db.ref('players').orderByChild('score').limitToLast(5).once('value', snap => {
+        const sorted = [];
+        snap.forEach(c => sorted.push(c.val()));
+        sorted.reverse(); // Mayor a menor
+
+        sorted.forEach((p, i) => {
+            const row = document.createElement('div');
+            row.style.background = "white";
+            row.style.color = "#333";
+            row.style.padding = "10px 15px";
+            row.style.margin = "5px 0";
+            row.style.borderRadius = "50px";
+            row.style.display = "flex";
+            row.style.justifyContent = "space-between";
+            row.style.alignItems = "center";
+            row.style.fontWeight = "bold";
+            row.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+
+            row.innerHTML = `
+                <span>${i + 1}. ${p.name}</span>
+                <span style="background:var(--ieu-orange); color:white; padding:2px 10px; border-radius:10px;">${p.score} pts</span>
+            `;
+            partialContainer.appendChild(row);
+        });
+    });
+}
+
 
 
 function renderQuestion(idx) {
