@@ -17,28 +17,32 @@ const questions = [
     {
         q: "Observa la gráfica: Inicio con VOLUMEN gigante (Azul) e INTENSIDAD baja. Al final se cruzan (Tijeretazo). ¿Qué modelo es?",
         options: ["Modelo ATR", "Modelo Clásico (Matveev)", "Modelo de Bloques", "Péndulo"],
-        correct: 1, // Index 0-based
-        image: "matveev_icon" // Usaremos un icono o texto si no hay imagen
+        correct: 1,
+        explanation: "💡 POR QUÉ: Es la firma visual de Matveev. El volumen crea la base piramidal ancha al inicio, y debe bajar forzosamente para que suba la intensidad."
     },
     {
         q: "La analogía del 'LÁSER vs BOMBILLA' explica la diferencia entre Cargas Concentradas y Distribuidas. ¿A qué modelo corresponde el LÁSER?",
         options: ["Modelo de Bloques (Verkhoshansky)", "Modelo Clásico", "Modelo Multicíclico", "Ninguno"],
-        correct: 0
+        correct: 0,
+        explanation: "💡 POR QUÉ: Verkhoshansky propone concentrar toda la energía en una sola capacidad (Fuerza) como un láser, en vez de iluminar todo suavemente (repartir cargas) como el modelo clásico."
     },
     {
         q: "En el fútbol, no podemos parar 3 meses para entrenar base. Usamos bloques cortos: Acumulación, Transformación y...",
         options: ["Competición", "Recuperación", "Realización", "Transición"],
-        correct: 2
+        correct: 2,
+        explanation: "💡 POR QUÉ: El ciclo ATR termina en Realización. Es cuando el embudo suelta el 'chorro' de rendimiento acumulado para el partido del domingo."
     },
     {
         q: "El modelo de 'Doble Pico' (Bicíclico) se usa cuando hay dos competencias fundamentales. ¿Qué se necesita en medio de ambas?",
         options: ["Más entrenamiento intenso", "Un valle de Transición/Recuperación", "Competencias secundarias", "Nada"],
-        correct: 1
+        correct: 1,
+        explanation: "💡 POR QUÉ: No puedes saltar de la cima del Everest al K2. Debes bajar al campamento base (Transición) para regenerar física y mentalmente antes de volver a subir."
     },
     {
         q: "¿Cuál es el objetivo principal del Modelo Pendular (Boxeo)?",
         options: ["Ganar masa muscular", "Evitar el aburrimiento del Sistema Nervioso", "Entrenar solo técnica", "Correr maratones"],
-        correct: 1
+        correct: 1,
+        explanation: "💡 POR QUÉ: Alternar cargas Generales y Específicas (como un columpio) mantiene al Sistema Nervioso 'fresco' y evita la acomodación o estancamiento ante estímulos monótonos."
     }
 ];
 
@@ -189,7 +193,13 @@ function syncInterface(state) {
         showScreen('results');
         renderChart(questionIdx);
         const q = questions[questionIdx];
-        document.getElementById('correct-text').innerHTML = `${q.options[q.correct]} ${isAdmin ? '<br><span style="font-size:0.8rem">(Acumulando puntos...)</span>' : ''}`;
+        document.getElementById('correct-text').innerHTML = `
+            ${q.options[q.correct]} 
+            ${isAdmin ? '<br><span style="font-size:0.8rem">(Acumulando puntos...)</span>' : ''}
+            <div style="margin-top: 1rem; font-size: 1.1rem; color: #555; font-weight: normal; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+                ${q.explanation}
+            </div>
+        `;
     }
     else if (phase === 'final') {
         showScreen('final');
