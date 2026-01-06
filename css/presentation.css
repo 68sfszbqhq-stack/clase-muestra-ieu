@@ -675,3 +675,85 @@ kbd {
         font-size: 1.5rem;
     }
 }
+/* Mobile Optimizations - Presentation */
+@media screen and (max-width: 768px) {
+    /* Navbar más compacta y botones grandes */
+    .nav-controls {
+        width: 90%;
+        padding: 0.8rem 1rem;
+        bottom: 1.5rem;
+        justify-content: space-between;
+    }
+    .nav-btn {
+        width: 55px; /* Más grande para tocar */
+        height: 55px;
+        font-size: 1.4rem;
+    }
+    .slide-counter { font-size: 1rem; }
+
+    /* Contenido Slides */
+    .slide {
+        padding: 4rem 1rem 8rem 1rem; /* Espacio abajo para navbar */
+        align-items: flex-start; /* Subir contenido */
+        overflow-y: auto; /* Permitir scroll si es largo */
+    }
+    .slide-content { margin-top: 1rem; }
+    .slide-heading { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .slide-text { font-size: 1.1rem; }
+    
+    /* Layouts Complejos a Columna Simple */
+    .two-columns {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .column { width: 100%; }
+    
+    /* Pasos y Listas */
+    .steps-container { flex-direction: column; gap: 1rem; }
+    .step { padding: 1.5rem; }
+    
+    /* Highlight Boxes */
+    .highlight-box { padding: 1rem; font-size: 1rem; }
+    .highlight-box i { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+    .highlight-box br { display: none; } /* Quitar saltos forzados */
+    
+    /* MODALES - Crítico */
+    div[id*="Modal"] > div {
+        width: 95% !important;
+        height: 95vh !important;
+        margin: 2.5vh auto !important;
+        flex-direction: column !important; /* Stack columns */
+        overflow-y: auto !important; /* Permitir scroll */
+        display: block !important; /* Romper flex layout desktop */
+    }
+    
+    /* Botón cerrar modal GRANDE */
+    div[id*="Modal"] span[onclick] {
+        font-size: 3.5rem !important;
+        padding: 0.5rem;
+        right: 0.5rem !important;
+        top: 0 !important;
+        color: #333 !important; /* Más contraste */
+        background: rgba(255,255,255,0.8);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Contenido modal móvil */
+    div[id*="Modal"] > div > div {
+        flex: none !important;
+        width: 100% !important;
+        max-height: none !important;
+        border-left: none !important;
+        border-bottom: 4px solid var(--ieu-orange);
+    }
+    
+    /* PDF Viewers en móvil */
+    iframe[src*=".pdf"] {
+        min-height: 400px;
+    }
+}

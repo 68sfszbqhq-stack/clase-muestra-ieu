@@ -296,3 +296,21 @@ body {
     width: 100%;
   }
 }
+
+/* Mobile Optimizations - Index & QR */
+@media screen and (max-width: 480px) {
+  .landing-header { margin-bottom: 2rem; }
+  .landing-header h1 { font-size: 3rem; }
+  .role-card { padding: 2rem 1.5rem; margin-bottom: 1rem; }
+  .logo-icon { font-size: 2.5rem; }
+  
+  /* QR Responsive */
+  .qr-section {
+    width: 90%;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+  .qr-section img {
+    max-width: 150px !important;
+  }
+}
