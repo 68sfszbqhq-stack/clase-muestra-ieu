@@ -166,25 +166,33 @@ function syncInterface(state) {
         showScreen('game');
         renderQuestion(questionIdx);
 
-        // Admin View Adjustments
+        // Admin: VER EXACTAMENTE LO MISMO QUE EL ALUMNO (Modo Espejo)
         if (isAdmin) {
-            // Admin siempre ve la pregunta
-            document.getElementById('q-text').style.fontSize = "2rem";
-            // Ocultar feedback personal en admin
-            document.getElementById('feedback-msg').style.display = 'none';
+            // Solo desactivar la interacción para no votar por error
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => {
+                b.style.pointerEvents = 'none'; // No clickable
+                b.style.cursor = 'default';
+            });
+            // Asegurar visibilidad total
+            document.getElementById('q-text').style.fontSize = ""; // Restaurar tamaño original/CSS
+            document.getElementById('feedback-msg').style.display = 'block';
+            document.getElementById('feedback-msg').textContent = "Proyectando pregunta...";
         }
 
         if (reveal) {
             showReveal(questionIdx);
         } else {
-            // Hide reveal elements
+            // Estado normal de pregunta (sin revelar)
             const btns = document.querySelectorAll('.option-btn');
             btns.forEach(b => {
+                // Restaurar visual
                 b.classList.remove('disabled');
                 b.style.opacity = "1";
                 b.style.border = "none";
-                // Remove any checkmarks
                 b.innerHTML = questions[questionIdx].options[b.dataset.idx];
+                // Si es admin, mantener desactivado el click
+                if (isAdmin) b.style.pointerEvents = 'none';
             });
             document.getElementById('correct-answer-reveal').style.display = 'none';
         }
