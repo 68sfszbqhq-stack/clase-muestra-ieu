@@ -757,3 +757,70 @@ kbd {
         min-height: 400px;
     }
 }
+
+/* Mobile Landscape Optimizations */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+    .presentation-container {
+        height: auto; /* Permitir scroll si excede altura */
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+
+    /* Navbar Compacta Lateral o Inferior Flotante */
+    .nav-controls {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        left: auto; /* Quitar centrado */
+        transform: none;
+        width: auto;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        opacity: 0.9;
+    }
+    .slide-counter { font-size: 0.9rem; min-width: 50px; }
+    .nav-btn { width: 40px; height: 40px; }
+
+    /* Ganar espacio vertical */
+    .logo-ieu { width: 40px; top: 0.5rem; left: 0.5rem; }
+    .progress-bar { height: 3px; }
+
+    /* Slide Content - Aprovechar el ancho */
+    .slide {
+        padding: 2rem 1rem 4rem 1rem; /* Menos padding arriba */
+        height: auto;
+        min-height: 100vh;
+        overflow-y: visible;
+        display: block; /* Quitar centrado vertical forzado */
+    }
+    
+    .slide-content {
+        margin-top: 0;
+        max-width: 90%;
+    }
+    
+    /* Restaurar 2 columnas si cabe */
+    .two-columns {
+        flex-direction: row; /* Volver a horizontal */
+        align-items: flex-start;
+    }
+    .column { width: 50%; }
+
+    /* Textos más compactos */
+    .slide-heading { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p, li { font-size: 1rem; line-height: 1.4; }
+    
+    /* Modales en Landscape */
+    div[id*="Modal"] > div {
+        flex-direction: row !important; /* Dos columnas como en PC */
+        height: 90vh !important;
+        margin: 5vh auto !important;
+    }
+    div[id*="Modal"] > div > div:first-child {
+        width: 40% !important;
+        overflow-y: auto;
+    }
+    div[id*="Modal"] > div > div:last-child {
+        width: 60% !important;
+    }
+}
