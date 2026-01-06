@@ -1,3 +1,20 @@
+/* Logo IEU en esquina superior izquierda */
+.logo-ieu {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 100px;
+  height: auto;
+  z-index: 150;
+  opacity: 0.95;
+  transition: var(--transition-normal);
+}
+
+.logo-ieu:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
 /* Presentation Styles - IEU */
 
 .presentation-container {
