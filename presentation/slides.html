@@ -36,9 +36,11 @@
                     <div class="logo-badge">
                         <i class="fa-solid fa-dumbbell"></i>
                     </div>
-                    <p class="institution" style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: 600;">Instituto de Estudios
+                    <p class="institution" style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: 600;">Instituto
+                        de Estudios
                         Universitarios</p>
-                    <p class="institution" style="font-size: 1.7rem; margin-bottom: 2.5rem; font-weight: 500;">Licenciatura en Ciencias
+                    <p class="institution" style="font-size: 1.7rem; margin-bottom: 2.5rem; font-weight: 500;">
+                        Licenciatura en Ciencias
                         del Deporte</p>
 
                     <p
@@ -68,17 +70,21 @@
                             <h3 style="color: var(--ieu-orange); margin-bottom: 1rem;">
                                 <i class="fa-solid fa-graduation-cap"></i> Formación Académica
                             </h3>
-                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 0.8rem;">
-                                <strong>Maestría en Educación Física y Deporte Escolar</strong><br>
+                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 0.5rem;">
+                                <strong>Estudios de Maestría en Educación Física y Deporte Escolar</strong><br>
                                 Benemérita Universidad Autónoma de Puebla (BUAP)
+                            </p>
+                            <p
+                                style="font-size: 0.95rem; color: #FF6B35; line-height: 1.6; margin-bottom: 1.2rem; font-style: italic;">
+                                • Proceso formativo enfocado en investigación científica aplicada<br>
+                                • <strong>Investigación destacada:</strong> <a href="#"
+                                    onclick="openResearchModal(); return false;"
+                                    style="color: var(--ieu-orange); text-decoration: underline; cursor: pointer;">Medición
+                                    de atención en arqueros</a> 🔍
                             </p>
                             <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 0.8rem;">
                                 <strong>Licenciatura en Cultura Física</strong><br>
                                 BUAP • Promedio: 9.08
-                            </p>
-                            <p style="font-size: 1rem; color: #666; line-height: 1.6;">
-                                <strong>Línea de investigación:</strong> Actividad física, alimentación en ambientes
-                                laborales y medición de atención en atletas
                             </p>
                         </div>
                         <div class="column" style="padding: 1.5rem;">
@@ -97,6 +103,19 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- Logro Destacado: Oferta Doctorado -->
+                    <div
+                        style="background: linear-gradient(135deg, #FFF9E6 0%, #FFE8D0 100%); padding: 1.5rem; border-radius: 16px; margin-top: 1.5rem; border-left: 5px solid #FFD700; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                        <p style="font-size: 1.15rem; line-height: 1.7; margin: 0;">
+                            <i class="fa-solid fa-star" style="color: #FFD700; margin-right: 0.5rem;"></i>
+                            <strong style="color: var(--ieu-dark);">Reconocimiento Académico:</strong>
+                            <span style="color: #666;">Oferta para cursar</span>
+                            <strong style="color: var(--ieu-orange);">Doctorado con Beca CONACYT</strong>
+                            <span style="color: #666;">basado en resultados de investigación</span>
+                        </p>
+                    </div>
+
                     <div class="highlight-box" style="margin-top: 1.5rem;">
                         <i class="fa-solid fa-trophy"></i>
                         <div style="text-align: left;">
@@ -110,6 +129,88 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal de Investigación -->
+            <div id="researchModal"
+                style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);">
+                <div
+                    style="background-color: white; margin: 5% auto; padding: 2.5rem; border-radius: 20px; width: 80%; max-width: 800px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; animation: slideInModal 0.4s ease;">
+                    <span onclick="closeResearchModal()"
+                        style="position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; font-weight: bold; color: #aaa; cursor: pointer; transition: 0.3s;">&times;</span>
+
+                    <h3 style="color: var(--ieu-orange); margin-bottom: 1.5rem; font-size: 2rem;">
+                        <i class="fa-solid fa-microscope"></i> Investigación: Medición de Atención en Arqueros
+                    </h3>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: var(--ieu-dark); margin-bottom: 1rem;">
+                            <strong>Objetivo:</strong> Desarrollar y validar instrumentos de medición de la atención
+                            visual en arqueros de alto rendimiento, identificando patrones de concentración que
+                            correlacionan con el desempeño competitivo.
+                        </p>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #666;">
+                            <strong>Metodología:</strong> Estudio cuantitativo con arqueros de nivel nacional e
+                            internacional, utilizando tecnología de seguimiento ocular y pruebas psicométricas
+                            especializadas.
+                        </p>
+                    </div>
+
+                    <div
+                        style="background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--ieu-orange); margin-bottom: 1rem; font-size: 1.3rem;">
+                            <i class="fa-solid fa-chart-line"></i> Resultados Destacados
+                        </h4>
+                        <ul style="list-style: none; padding: 0; font-size: 1.05rem; line-height: 1.8; color: #666;">
+                            <li>✅ Identificación de 3 patrones clave de atención en arqueros de élite</li>
+                            <li>✅ Correlación significativa (r > 0.75) entre atención sostenida y puntaje</li>
+                            <li>✅ Desarrollo de protocolo de entrenamiento mental basado en datos</li>
+                            <li>✅ Presentación en Congreso Internacional de Educación Física</li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center; padding: 1rem; background: #FFF9E6; border-radius: 12px;">
+                        <p style="font-size: 1.1rem; color: var(--ieu-dark); margin: 0;">
+                            <i class="fa-solid fa-lightbulb" style="color: #FFD700;"></i>
+                            <strong>Impacto:</strong> Esta investigación fundamentó la oferta de Doctorado con Beca
+                            CONACYT
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                @keyframes slideInModal {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-50px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                #researchModal span:hover {
+                    color: #000;
+                }
+            </style>
+
+            <script>
+                function openResearchModal() {
+                    document.getElementById('researchModal').style.display = 'block';
+                }
+                function closeResearchModal() {
+                    document.getElementById('researchModal').style.display = 'none';
+                }
+                // Cerrar modal al hacer click fuera
+                window.onclick = function (event) {
+                    var modal = document.getElementById('researchModal');
+                    if (event.target == modal) {
+                        closeResearchModal();
+                    }
+                }
+            </script>
 
             <!-- Slide 3: Objetivos y Encuadre (3 min TOTAL hasta aquí) -->
             <div class="slide" data-slide="3">
