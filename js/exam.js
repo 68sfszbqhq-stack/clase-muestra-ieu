@@ -1,317 +1,366 @@
-// Exam Logic - IEU
+// Firebase Configuration (User Provided)
+const firebaseConfig = {
+    apiKey: "AIzaSyCys_vb7penAxx0vYZxa8UKZLVbIKCNMS0",
+    authDomain: "claseieu.firebaseapp.com",
+    projectId: "claseieu",
+    storageBucket: "claseieu.firebasestorage.app",
+    messagingSenderId: "1061581896742",
+    appId: "1:1061581896742:web:8e33255a37409a64407ae7"
+};
 
-// Exam Questions Database
-const examQuestions = [
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// --- GAME DATA ---
+const questions = [
     {
-        id: 1,
-        question: "¿Cuál es el principal objetivo de esta clase muestra?",
-        options: [
-            "Aprender conceptos básicos",
-            "Conocer la metodología de enseñanza",
-            "Evaluar conocimientos previos",
-            "Todas las anteriores"
-        ],
-        correct: 3 // Index of correct answer (0-based)
+        q: "Observa la gráfica: Inicio con VOLUMEN gigante (Azul) e INTENSIDAD baja. Al final se cruzan (Tijeretazo). ¿Qué modelo es?",
+        options: ["Modelo ATR", "Modelo Clásico (Matveev)", "Modelo de Bloques", "Péndulo"],
+        correct: 1, // Index 0-based
+        image: "matveev_icon" // Usaremos un icono o texto si no hay imagen
     },
     {
-        id: 2,
-        question: "¿Qué ventaja ofrece el aprendizaje interactivo?",
-        options: [
-            "Mayor retención de información",
-            "Participación activa del estudiante",
-            "Retroalimentación inmediata",
-            "Todas las anteriores"
-        ],
-        correct: 3
-    },
-    {
-        id: 3,
-        question: "La educación moderna se caracteriza por:",
-        options: [
-            "Uso exclusivo de libros",
-            "Tecnología y metodologías innovadoras",
-            "Memorización de contenidos",
-            "Clases magistrales únicamente"
-        ],
-        correct: 1
-    },
-    {
-        id: 4,
-        question: "¿Cuál es un beneficio del trabajo colaborativo?",
-        options: [
-            "Desarrollo de habilidades sociales",
-            "Aprendizaje de perspectivas diversas",
-            "Resolución de problemas complejos",
-            "Todas las anteriores"
-        ],
-        correct: 3
-    },
-    {
-        id: 5,
-        question: "El pensamiento crítico implica:",
-        options: [
-            "Aceptar información sin cuestionar",
-            "Analizar y evaluar información objetivamente",
-            "Memorizar datos",
-            "Seguir instrucciones al pie de la letra"
-        ],
-        correct: 1
-    },
-    {
-        id: 6,
-        question: "¿Qué habilidad es más valorada en el siglo XXI?",
-        options: [
-            "Memorización",
-            "Adaptabilidad y aprendizaje continuo",
-            "Seguir procedimientos fijos",
-            "Trabajar en aislamiento"
-        ],
-        correct: 1
-    },
-    {
-        id: 7,
-        question: "La retroalimentación efectiva debe ser:",
-        options: [
-            "Constante y específica",
-            "General y poco frecuente",
-            "Solo al final del curso",
-            "Únicamente negativa"
-        ],
+        q: "La analogía del 'LÁSER vs BOMBILLA' explica la diferencia entre Cargas Concentradas y Distribuidas. ¿A qué modelo corresponde el LÁSER?",
+        options: ["Modelo de Bloques (Verkhoshansky)", "Modelo Clásico", "Modelo Multicíclico", "Ninguno"],
         correct: 0
     },
     {
-        id: 8,
-        question: "¿Qué caracteriza a un buen ambiente de aprendizaje?",
-        options: [
-            "Competencia extrema",
-            "Silencio absoluto",
-            "Colaboración y respeto mutuo",
-            "Individualismo"
-        ],
+        q: "En el fútbol, no podemos parar 3 meses para entrenar base. Usamos bloques cortos: Acumulación, Transformación y...",
+        options: ["Competición", "Recuperación", "Realización", "Transición"],
         correct: 2
     },
     {
-        id: 9,
-        question: "El aprendizaje significativo ocurre cuando:",
-        options: [
-            "Memorizamos información",
-            "Conectamos conocimientos nuevos con previos",
-            "Copiamos sin entender",
-            "Evitamos hacer preguntas"
-        ],
+        q: "El modelo de 'Doble Pico' (Bicíclico) se usa cuando hay dos competencias fundamentales. ¿Qué se necesita en medio de ambas?",
+        options: ["Más entrenamiento intenso", "Un valle de Transición/Recuperación", "Competencias secundarias", "Nada"],
         correct: 1
     },
     {
-        id: 10,
-        question: "¿Cuál es el rol del estudiante en la educación moderna?",
-        options: [
-            "Receptor pasivo de información",
-            "Participante activo en su aprendizaje",
-            "Memorizar sin cuestionar",
-            "Solo escuchar al profesor"
-        ],
+        q: "¿Cuál es el objetivo principal del Modelo Pendular (Boxeo)?",
+        options: ["Ganar masa muscular", "Evitar el aburrimiento del Sistema Nervioso", "Entrenar solo técnica", "Correr maratones"],
         correct: 1
     }
 ];
 
-// State
-let studentAnswers = {};
+// --- STATE MANAGMENT ---
+let myPlayerId = localStorage.getItem('ieu_playerId');
+let myName = localStorage.getItem('ieu_playerName');
+let isAdmin = false;
 
 // DOM Elements
-const questionsContainer = document.getElementById('questionsContainer');
-const examForm = document.getElementById('examForm');
-const resultsContainer = document.getElementById('resultsContainer');
-const examInstructions = document.getElementById('examInstructions');
+const screens = {
+    login: document.getElementById('screen-login'),
+    lobby: document.getElementById('screen-lobby'),
+    game: document.getElementById('screen-game'),
+    results: document.getElementById('screen-results'),
+    final: document.getElementById('screen-final')
+};
 
-// Initialize Exam
-function initExam() {
-    renderQuestions();
-    loadSavedAnswers();
+// --- INIT ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Check URL for admin
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('admin')) {
+        enableAdminMode();
+    }
+
+    // Auto-login check
+    if (myName && !isAdmin) {
+        document.getElementById('playerName').value = myName;
+        // Optional: Auto join? Better let them click to confirm
+    }
+
+    // LISTENER GLOBAL DE ESTADO DE JUEGO
+    db.ref('gameState').on('value', (snapshot) => {
+        const state = snapshot.val() || { phase: 'login', questionIdx: 0 };
+        syncInterface(state);
+    });
+});
+
+function showScreen(screenName) {
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[screenName].classList.add('active');
 }
 
-// Render all questions
-function renderQuestions() {
-    questionsContainer.innerHTML = examQuestions.map((q, index) => `
-        <div class="question-card" data-question-id="${q.id}">
-            <span class="question-number">Pregunta ${q.id}</span>
-            <p class="question-text">${q.question}</p>
-            <div class="options-container">
-                ${q.options.map((option, optIndex) => `
-                    <button type="button" 
-                            class="option-btn" 
-                            data-question-id="${q.id}" 
-                            data-option-index="${optIndex}"
-                            onclick="selectOption(${q.id}, ${optIndex})">
-                        <span class="option-letter">${String.fromCharCode(65 + optIndex)}</span>
-                        <span>${option}</span>
-                    </button>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
+// --- PLAYER ACTIONS ---
+
+document.getElementById('joinForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('playerName').value.trim();
+    if (!nameInput) return;
+
+    if (!myPlayerId) {
+        myPlayerId = 'player_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        localStorage.setItem('ieu_playerId', myPlayerId);
+    }
+    myName = nameInput;
+    localStorage.setItem('ieu_playerName', myName);
+
+    // Register in Firebase
+    db.ref(`players/${myPlayerId}`).set({
+        name: myName,
+        score: 0,
+        lastAnswer: -1,
+        online: true
+    });
+
+    // Handle disconnect
+    db.ref(`players/${myPlayerId}`).onDisconnect().remove();
+
+    showScreen('lobby');
+});
+
+function submitAnswer(optionIdx) {
+    // UI Feedback
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => {
+        b.classList.add('disabled');
+        if (b.dataset.idx == optionIdx) b.classList.add('selected');
+    });
+
+    document.getElementById('feedback-msg').textContent = "Respuesta enviada...";
+
+    // Send to Firebase
+    db.ref(`players/${myPlayerId}/lastAnswer`).set(optionIdx);
 }
 
-// Select an option
-function selectOption(questionId, optionIndex) {
-    // Save answer
-    studentAnswers[questionId] = optionIndex;
+// --- SYNC LOGIC (CORE) ---
 
-    // Update UI
-    const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
-    const allOptions = questionCard.querySelectorAll('.option-btn');
+function syncInterface(state) {
+    const { phase, questionIdx, reveal } = state;
 
-    allOptions.forEach(btn => btn.classList.remove('selected'));
-    const selectedBtn = questionCard.querySelector(`[data-question-id="${questionId}"][data-option-index="${optionIndex}"]`);
-    selectedBtn.classList.add('selected');
+    // Admin UI always shows controls
+    if (isAdmin) {
+        document.getElementById('admin-controls').style.display = 'flex';
+        updateAdminStats(questionIdx);
+    }
 
-    // Save to localStorage
-    saveAnswers();
-}
+    if (phase === 'lobby') {
+        showScreen('lobby');
+        // Listen for players count
+        db.ref('players').on('value', (snap) => {
+            const count = snap.numChildren();
+            document.getElementById('lobby-count').textContent = count;
 
-// Save answers to localStorage
-function saveAnswers() {
-    localStorage.setItem('examAnswers', JSON.stringify(studentAnswers));
-}
-
-// Load saved answers
-function loadSavedAnswers() {
-    const saved = localStorage.getItem('examAnswers');
-    if (saved) {
-        studentAnswers = JSON.parse(saved);
-
-        // Restore UI state
-        Object.keys(studentAnswers).forEach(questionId => {
-            const optionIndex = studentAnswers[questionId];
-            const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
-            if (questionCard) {
-                const selectedBtn = questionCard.querySelector(`[data-option-index="${optionIndex}"]`);
-                if (selectedBtn) {
-                    selectedBtn.classList.add('selected');
-                }
+            if (isAdmin) {
+                const list = document.getElementById('admin-player-list');
+                list.style.display = 'flex';
+                list.innerHTML = '';
+                snap.forEach(child => {
+                    const p = child.val();
+                    list.innerHTML += `<span class="player-badge">${p.name}</span>`;
+                });
             }
+        });
+    }
+    else if (phase === 'question') {
+        showScreen('game');
+        renderQuestion(questionIdx);
+
+        // Reset local UI for new question if needed
+        if (!document.querySelector('.option-btn.selected')) {
+            // Clean state
+        }
+
+        if (reveal) {
+            // Show correct answer
+            showReveal(questionIdx);
+        } else {
+            // Wait for answer
+            document.getElementById('correct-answer-reveal').style.display = 'none'; // Hide if reused in game screen
+        }
+    }
+    else if (phase === 'results') {
+        showScreen('results');
+        renderChart(questionIdx);
+        const q = questions[questionIdx];
+        document.getElementById('correct-text').textContent = q.options[q.correct];
+    }
+    else if (phase === 'final') {
+        showScreen('final');
+        renderPodium();
+    }
+}
+
+
+function renderQuestion(idx) {
+    const q = questions[idx];
+    document.getElementById('q-text').textContent = q.q;
+    const cont = document.getElementById('options-container');
+
+    // Solo regenerar si cambió la pregunta para no borrar selección
+    if (cont.dataset.currentQ != idx) {
+        cont.dataset.currentQ = idx;
+        cont.innerHTML = '';
+        document.getElementById('feedback-msg').textContent = "";
+
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = `option-btn opt-${i}`;
+            btn.dataset.idx = i;
+            btn.innerHTML = opt;
+            btn.onclick = () => submitAnswer(i);
+            cont.appendChild(btn);
         });
     }
 }
 
-// Submit exam
-examForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    // Check if all questions are answered
-    if (Object.keys(studentAnswers).length < examQuestions.length) {
-        alert('Por favor responde todas las preguntas antes de enviar el examen.');
-        return;
-    }
-
-    // Calculate score
-    const results = calculateScore();
-
-    // Show results
-    showResults(results);
-});
-
-// Calculate score
-function calculateScore() {
-    let correct = 0;
-    let incorrect = 0;
-
-    examQuestions.forEach(q => {
-        const studentAnswer = studentAnswers[q.id];
-        if (studentAnswer === q.correct) {
-            correct++;
+function showReveal(idx) {
+    const q = questions[idx];
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => {
+        b.classList.add('disabled');
+        if (b.dataset.idx == q.correct) {
+            b.style.border = "4px solid white";
+            b.style.transform = "scale(1.1)";
+            b.innerHTML += " ✅";
         } else {
-            incorrect++;
+            b.style.opacity = "0.3";
         }
     });
 
-    const total = examQuestions.length;
-    const percentage = Math.round((correct / total) * 100);
-    const score = Math.round((correct / total) * 10); // Score out of 10
-
-    return {
-        correct,
-        incorrect,
-        total,
-        percentage,
-        score
-    };
-}
-
-// Show results
-function showResults(results) {
-    // Hide exam form
-    examForm.classList.add('hidden');
-    examInstructions.classList.add('hidden');
-
-    // Show results container
-    resultsContainer.classList.remove('hidden');
-
-    // Update results
-    document.getElementById('scoreNumber').textContent = results.score;
-    document.getElementById('correctCount').textContent = results.correct;
-    document.getElementById('incorrectCount').textContent = results.incorrect;
-    document.getElementById('grade').textContent = results.percentage;
-
-    // Message based on score
-    const messageEl = document.getElementById('resultsMessage');
-    const textEl = document.getElementById('resultsText');
-
-    if (results.percentage >= 90) {
-        messageEl.textContent = '¡Excelente trabajo! 🎉';
-        textEl.textContent = 'Tienes un dominio sobresaliente del tema.';
-    } else if (results.percentage >= 70) {
-        messageEl.textContent = '¡Muy bien! ✨';
-        textEl.textContent = 'Demuestras un buen entendimiento del contenido.';
-    } else if (results.percentage >= 60) {
-        messageEl.textContent = '¡Buen intento! 👍';
-        textEl.textContent = 'Tienes conocimientos básicos, sigue practicando.';
-    } else {
-        messageEl.textContent = 'Sigue aprendiendo 📚';
-        textEl.textContent = 'Revisa el material y vuelve a intentarlo.';
-    }
-
-    // Clear saved answers
-    localStorage.removeItem('examAnswers');
-
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Optional: Send results to server/database
-    // sendResultsToServer(results);
-}
-
-// Optional: Send results to server
-function sendResultsToServer(results) {
-    // Implementar integración con Firebase o backend
-    console.log('Results:', results);
-
-    // Example Firebase integration:
-    /*
-    firebase.firestore().collection('exam_results').add({
-        score: results.score,
-        percentage: results.percentage,
-        correct: results.correct,
-        incorrect: results.incorrect,
-        timestamp: new Date(),
-        answers: studentAnswers
-    }).then(() => {
-        console.log('Results saved to Firebase');
-    }).catch((error) => {
-        console.error('Error saving results:', error);
+    // Check my answer
+    db.ref(`players/${myPlayerId}/lastAnswer`).once('value', s => {
+        const myAns = s.val();
+        const msg = document.getElementById('feedback-msg');
+        if (myAns === q.correct) {
+            msg.textContent = "¡CORRECTO! +100 puntos 🎉";
+            msg.style.color = "#4CAF50";
+        } else {
+            msg.textContent = "Incorrecto 😢";
+            msg.style.color = "#F44336";
+        }
     });
-    */
 }
 
-// Initialize on load
-document.addEventListener('DOMContentLoaded', initExam);
+// --- ADMIN LOGIC ---
 
-// Console message
-console.log(`
-%c📝 Examen IEU 📝
-%cTotal de preguntas: ${examQuestions.length}
-Tus respuestas se guardan automáticamente.
-¡Buena suerte! 🍀
-`,
-    'font-size: 20px; font-weight: bold; color: #FF6B35;',
-    'font-size: 14px; color: #1D1D1D;'
-);
+function enableAdminMode() {
+    isAdmin = true;
+    alert("Modo Profesor Activado 👨‍🏫");
+    showScreen('lobby');
+    document.getElementById('admin-controls').style.display = 'flex';
+
+    // Initial State Check -> if null, set lobby
+    db.ref('gameState').once('value', s => {
+        if (!s.exists()) adminResetGame();
+    });
+}
+
+function adminResetGame() {
+    if (!confirm("¿Reiniciar juego para todos?")) return;
+    db.ref('gameState').set({ phase: 'lobby', questionIdx: 0, reveal: false });
+    db.ref('players').remove(); // Clear players
+}
+
+function adminNextPhase() {
+    db.ref('gameState').once('value', snap => {
+        let state = snap.val();
+        let { phase, questionIdx, reveal } = state;
+
+        if (phase === 'lobby') {
+            // Start Game -> Q1
+            db.ref('gameState').update({ phase: 'question', questionIdx: 0, reveal: false });
+        }
+        else if (phase === 'question') {
+            if (!reveal) {
+                // Reveal Answer
+                db.ref('gameState').update({ reveal: true });
+
+                // Calculate Scores
+                calculateScores(questionIdx);
+            } else {
+                // Go to Chart/Results
+                db.ref('gameState').update({ phase: 'results' });
+            }
+        }
+        else if (phase === 'results') {
+            // Next Question or Final
+            const nextIdx = questionIdx + 1;
+            if (nextIdx < questions.length) {
+                // Reset Answers for next Q
+                db.ref('players').once('value', ps => {
+                    ps.forEach(p => p.ref.update({ lastAnswer: -1 }));
+                });
+                db.ref('gameState').update({ phase: 'question', questionIdx: nextIdx, reveal: false });
+            } else {
+                db.ref('gameState').update({ phase: 'final' });
+            }
+        }
+    });
+}
+
+function calculateScores(qIdx) {
+    const correctOpt = questions[qIdx].correct;
+    db.ref('players').once('value', snap => {
+        snap.forEach(playerSnap => {
+            const p = playerSnap.val();
+            if (p.lastAnswer === correctOpt) {
+                // Add points (simple +100)
+                playerSnap.ref.update({ score: (p.score || 0) + 100 });
+            }
+        });
+    });
+}
+
+// --- CHARTS & PODIUM ---
+
+function renderChart(qIdx) {
+    const container = document.getElementById('chart-container');
+    container.innerHTML = '';
+
+    // Contar respuestas
+    const counts = [0, 0, 0, 0];
+    db.ref('players').once('value', snap => {
+        snap.forEach(p => {
+            const ans = p.val().lastAnswer;
+            if (ans >= 0 && ans < 4) counts[ans]++;
+        });
+
+        // Render Bars
+        const max = Math.max(...counts, 1);
+        const colors = ["#e21b3c", "#1368ce", "#d89e00", "#26890c"]; // Kahoot Colors
+
+        counts.forEach((val, i) => {
+            const height = (val / max) * 100;
+            const col = document.createElement('div');
+            col.className = 'bar-col';
+            col.innerHTML = `
+                <div class="bar-val">${val}</div>
+                <div class="bar" style="height: ${height}%; background: ${colors[i]};"></div>
+                <div style="margin-top:5px; font-weight:bold; font-size: 1.2rem;">${String.fromCharCode(65 + i)}</div>
+            `;
+            container.appendChild(col);
+        });
+    });
+}
+
+function renderPodium() {
+    const pod = document.getElementById('podium-container');
+    pod.innerHTML = '';
+
+    db.ref('players').orderByChild('score').limitToLast(5).once('value', snap => {
+        const sorted = [];
+        snap.forEach(c => sorted.push(c.val()));
+        sorted.reverse(); // Highest first
+
+        sorted.forEach((p, i) => {
+            const row = document.createElement('div');
+            row.style.background = i === 0 ? "gold" : (i === 1 ? "silver" : (i === 2 ? "#cd7f32" : "white"));
+            row.style.color = i > 2 ? "#333" : "#000";
+            row.style.padding = "1rem";
+            row.style.margin = "0.5rem 0";
+            row.style.borderRadius = "10px";
+            row.style.display = "flex";
+            row.style.justifyContent = "space-between";
+            row.style.fontSize = "1.2rem";
+            row.style.fontWeight = "bold";
+
+            row.innerHTML = `
+                <span>#${i + 1} ${p.name}</span>
+                <span>${p.score} pts</span>
+            `;
+            pod.appendChild(row);
+        });
+    });
+}
