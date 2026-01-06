@@ -518,15 +518,54 @@
                     <div style="flex: 1; overflow: auto; padding: 1rem; background: #f4f4f4; text-align: center;">
                         <img src="../assets/dashboard_periodizacion.svg" alt="Dashboard Periodización" style="max-width: 100%; height: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: white; border-radius: 4px;">
                         
-                        <div style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 8px; text-align: left; max-width: 1200px; margin-left: auto; margin-right: auto;">
-                            <h4 style="color: var(--ieu-orange);">💡 Análisis de Datos:</h4>
-                            <p style="font-size: 0.95rem; color: #555;">Este dashboard demuestra cómo la <strong>curva de volumen e intensidad</strong> se adapta drásticamente según la lógica interna de cada deporte.</p>
-                            <ul style="font-size: 0.9rem; color: #666; margin-top: 0.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                                <li>• <strong>Fútbol/Basket:</strong> Ondulaciones frecuentes (micro-bloques).</li>
-                                <li>• <strong>Natación:</strong> Cruce clásico (Volumen baja, Intensidad sube).</li>
-                                <li>• <strong>Gimnasia:</strong> Bloques de fuerza extremadamente marcados.</li>
-                                <li>• <strong>Boxeo:</strong> Modelo pendular rítmico.</li>
-                            </ul>
+                        <div style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 8px; text-align: left; max-width: 1300px; margin-left: auto; margin-right: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
+                            <h4 style="color: var(--ieu-orange); margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
+                                <i class="fa-solid fa-chalkboard-user"></i> Guía Pedagógica: ¿Por qué cada curva es diferente?
+                            </h4>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                <!-- 1. Natación -->
+                                <div style="background: #E3F2FD; padding: 1rem; border-radius: 8px; border-left: 4px solid #1976D2;">
+                                    <h5 style="color: #1565C0; margin-bottom: 0.5rem; font-size: 1rem;">1. La Curva del "Tijeretazo" (Natación)</h5>
+                                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 0.5rem;"><strong>Qué ver:</strong> Inversión total. Inicio: Azul enorme (Vol). Fin: Roja arriba (Int).</p>
+                                    <p style="font-size: 0.85rem; font-style: italic; color: #555;">"Construimos un tanque de combustible enorme (Volumen) para luego ponerle un motor de Ferrari (Intensidad). Sin la base aeróbica, el motor se funde."</p>
+                                </div>
+                                
+                                <!-- 2. Fútbol -->
+                                <div style="background: #E8F5E9; padding: 1rem; border-radius: 8px; border-left: 4px solid #2E7D32;">
+                                    <h5 style="color: #2E7D32; margin-bottom: 0.5rem; font-size: 1rem;">2. La Montaña Rusa (Fútbol - ATR)</h5>
+                                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 0.5rem;"><strong>Qué ver:</strong> Bloques cortos que suben y bajan rápido.</p>
+                                    <p style="font-size: 0.85rem; font-style: italic; color: #555;">"El fútbol no perdona. Acumular, Transformar, Realizar. Repetir 3 veces al año. El jugador necesita ponerse en forma y competir constantemente."</p>
+                                </div>
+                                
+                                <!-- 3. Tiro con Arco -->
+                                <div style="background: #FFF3E0; padding: 1rem; border-radius: 8px; border-left: 4px solid #EF6C00;">
+                                    <h5 style="color: #EF6C00; margin-bottom: 0.5rem; font-size: 1rem;">3. El Doble Pico (Tiro con Arco)</h5>
+                                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 0.5rem;"><strong>Qué ver:</strong> Dos montañas rojas separadas por un valle.</p>
+                                    <p style="font-size: 0.85rem; font-style: italic; color: #555;">"La precisión mental fatiga. No se puede estar 'en la zona' todo el año. Creamos dos cimas (Clasificatorio y Olimpiada) con un valle de recuperación mental en medio."</p>
+                                </div>
+                                
+                                <!-- 4. Gimnasia -->
+                                <div style="background: #F3E5F5; padding: 1rem; border-radius: 8px; border-left: 4px solid #7B1FA2;">
+                                    <h5 style="color: #7B1FA2; margin-bottom: 0.5rem; font-size: 1rem;">4. La Meseta Sísmica (Pesas/Gym)</h5>
+                                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 0.5rem;"><strong>Qué ver:</strong> Intensidad (roja) siempre alta (>85%).</p>
+                                    <p style="font-size: 0.85rem; font-style: italic; color: #555;">"Para ser fuerte, hay que levantar pesado. La intensidad casi no baja; manipulamos el volumen para que el atleta no se rompa."</p>
+                                </div>
+                                
+                                <!-- 5. Boxeo -->
+                                <div style="background: #FFEBEE; padding: 1rem; border-radius: 8px; border-left: 4px solid #C62828;">
+                                    <h5 style="color: #C62828; margin-bottom: 0.5rem; font-size: 1rem;">5. El Péndulo (Boxeo)</h5>
+                                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 0.5rem;"><strong>Qué ver:</strong> Oscilación rítmica constante.</p>
+                                    <p style="font-size: 0.85rem; font-style: italic; color: #555;">"Alternamos: golpe al costal (físico) y sparring (técnico). Evitamos el aburrimiento del sistema nervioso y mantenemos al peleador afilado."</p>
+                                </div>
+
+                                <!-- Nota Final -->
+                                <div style="background: #FAFAFA; padding: 1rem; border-radius: 8px; border-left: 4px solid #757575; display: flex; align-items: center; justify-content: center;">
+                                    <p style="font-size: 0.95rem; color: #333; text-align: center;">
+                                        <strong>Conclusión:</strong><br>La periodización no es una fórmula mágica, es una <strong>adaptación lógica</strong> a las reglas y demandas biológicas de cada deporte.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
