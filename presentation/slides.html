@@ -429,6 +429,64 @@
                 </div>
             </div>
 
+
+            <!-- Modal Artículo Científico -->
+            <div id="articleModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);">
+                <div style="background-color: white; margin: 2% auto; padding: 0; border-radius: 20px; width: 92%; max-width: 1600px; height: 90vh; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; animation: slideInModal 0.4s ease; display: flex; overflow: hidden;">
+                    <span onclick="closeArticleModal()" style="position: absolute; top: 0.8rem; right: 1.2rem; font-size: 2.5rem; font-weight: bold; color: #aaa; cursor: pointer; transition: 0.3s; z-index: 10;">&times;</span>
+                    
+                    <!-- Columna Izquierda: Información del Artículo (30%) -->
+                    <div style="flex: 0 0 30%; padding: 2.5rem 2rem; overflow-y: auto; max-height: 90vh; background: #f8f9fa;">
+                        <h3 style="color: #0066CC; margin-bottom: 1.5rem; font-size: 1.6rem; line-height: 1.3;">
+                            <i class="fa-solid fa-file-alt"></i> Artículo de Referencia
+                        </h3>
+                        
+                        <div style="background: white; padding: 1.3rem; border-radius: 12px; margin-bottom: 1.3rem; border-left: 4px solid #0066CC;">
+                            <h4 style="color: var(--ieu-dark); margin-bottom: 0.7rem; font-size: 1.1rem; line-height: 1.4;">
+                                Criterios para identificar y evaluar modelos de periodización de entrenamiento deportivo
+                            </h4>
+                            <p style="font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                Artículo científico que establece los fundamentos teóricos y criterios empíricos para evaluar la efectividad de diferentes modelos de periodización.
+                            </p>
+                        </div>
+
+                        <div style="background: white; padding: 1.3rem; border-radius: 12px; margin-bottom: 1.3rem;">
+                            <h4 style="color: var(--ieu-dark); margin-bottom: 0.7rem; font-size: 1.1rem;">
+                                <i class="fa-solid fa-lightbulb"></i> Relevancia para la Sesión
+                            </h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.95rem; line-height: 1.6; color: #555;">
+                                <li style="margin-bottom: 0.5rem;">✅ Fundamenta la comparación de modelos</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Proporciona criterios de evaluación científica</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Contextualiza enfoques contemporáneos</li>
+                                <li>✅ Justifica adaptación técnica por deporte</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E6F3FF 0%, #D0E8FF 100%); padding: 1.2rem; border-radius: 12px;">
+                            <p style="font-size: 0.9rem; color: #0066CC; margin: 0; line-height: 1.5;">
+                                <i class="fa-solid fa-info-circle"></i>
+                                <strong>Nota:</strong> Este artículo fundamenta los conceptos que desarrollaremos en los siguientes slides sobre modelos contemporáneos.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Columna Derecha: PDF Artículo (70%) -->
+                    <div style="flex: 0 0 70%; background: #2c2c2c; border-left: 4px solid #0066CC; display: flex; flex-direction: column;">
+                        <div style="background: #0066CC; color: white; padding: 1rem; text-align: center; font-weight: 700; font-size: 1.1rem;">
+                            <i class="fa-solid fa-file-pdf"></i> Artículo Científico - Lectura Interactiva
+                        </div>
+                        <div style="flex: 1; background: white; margin: 0.5rem; border-radius: 8px; overflow: hidden;">
+                            <iframe 
+                                src="../assets/Criterios para identificar y evaluar modelos de periodización de entrenamiento deportivo.pdf#page=1&zoom=page-fit" 
+                                style="width: 100%; height: 100%; border: none;"
+                                type="application/pdf">
+                                <p style="padding: 2rem; text-align: center;">Tu navegador no soporta PDFs embebidos. <a href="../assets/Criterios para identificar y evaluar modelos de periodización de entrenamiento deportivo.pdf" target="_blank">Descargar PDF</a></p>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <style>
                 @keyframes slideInModal {
                     from {
@@ -480,98 +538,165 @@
                 function closeArcheryModal() {
                     document.getElementById('archeryModal').style.display = 'none';
                 }
+                function openArticleModal() {
+                    document.getElementById('articleModal').style.display = 'block';
+                }
+                function closeArticleModal() {
+                    document.getElementById('articleModal').style.display = 'none';
+                }
             </script>
 
-            <!-- Slide 3: Objetivos y Encuadre (3 min TOTAL hasta aquí) -->
+            <!-- Slide 3: Encuadre y Objetivos (3 min TOTAL hasta aquí) -->
             <div class="slide" data-slide="3">
                 <div class="slide-content">
-                    <h2 class="slide-heading">Encuadre y Objetivos</h2>
-                    <div class="content-box" style="background: #FFF5F2; border-left: 5px solid var(--ieu-orange);">
-                        <p class="slide-text" style="font-size: 1.3rem;">
-                            <strong>Bienvenidos a la sesión sobre la evolución de la planificación deportiva.</strong>
-                            En el alto rendimiento moderno, la competencia ya no es un evento aislado, sino un
-                            <strong>sistema dinámico y comercializado</strong>.
+                    <h2 class="slide-heading">Encuadre de la Sesión</h2>
+                    
+                    <div class="content-box" style="background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%); border-left: 5px solid var(--ieu-orange); padding: 2rem;">
+                        <p class="slide-text" style="font-size: 1.4rem; line-height: 1.7;">
+                            <strong>Bienvenidos.</strong> En el alto rendimiento deportivo contemporáneo, la <strong>periodización del entrenamiento</strong> ha evolucionado de modelos clásicos a enfoques más flexibles y adaptativos.
                         </p>
                     </div>
+                    
                     <div class="highlight-box" style="margin-top: 2rem;">
                         <i class="fa-solid fa-bullseye"></i>
-                        <p><strong>Objetivo:</strong> Analizar y comparar los modelos contemporáneos de periodización
-                            (Bloques, ATR, Multicíclico) y determinar cómo la técnica específica debe adaptarse según
-                            las características de cada deporte.</p>
+                        <div>
+                            <p style="margin-bottom: 1rem;"><strong style="font-size: 1.3rem;">Objetivo de la Sesión:</strong></p>
+                            <p style="font-size: 1.2rem;">Analizar y comparar <strong>modelos contemporáneos de periodización</strong> (Bloques, ATR, Multicíclico) y determinar cómo la <strong>técnica específica</strong> debe adaptarse según las características de cada deporte.</p>
+                        </div>
                     </div>
-                    <div class="content-box" style="margin-top: 2rem; background: #FFF9E6;">
-                        <p style="font-size: 1.2rem; color: var(--ieu-dark);">
-                            <strong>💭 Pregunta Constructivista:</strong><br>
-                            <em>"Si tuvieran un nadador que debe competir en 5 copas mundiales en 3 meses, ¿utilizarían
-                                el modelo clásico de Matveev de una sola cima? ¿Por qué?"</em>
+                    
+                    <div class="content-box" style="margin-top: 2rem; background: #fff; border: 2px solid #0066CC; padding: 1.8rem;">
+                        <p style="font-size: 1.1rem; color: var(--ieu-dark); margin-bottom: 1rem;">
+                            <i class="fa-solid fa-quote-left" style="color: #0066CC; margin-right: 0.5rem;"></i>
+                            <strong>Marco Conceptual - Artículo Científico:</strong>
+                        </p>
+                        <p style="font-size: 1rem; line-height: 1.7; color: #555; font-style: italic; margin-bottom: 1rem;">
+                            "Los modelos de periodización deben ser evaluados según criterios específicos que incluyen fundamentación teórica, aplicabilidad práctica y evidencia empírica de efectividad."
+                        </p>
+                        <p style="font-size: 0.95rem; color: #666;">
+                            <strong>Fuente:</strong> 
+                            <a href="#" onclick="openArticleModal(); return false;" style="color: #0066CC; text-decoration: underline; cursor: pointer; font-weight: 600;">
+                                Criterios para identificar y evaluar modelos de periodización de entrenamiento deportivo
+                            </a>
+                            <i class="fa-solid fa-external-link-alt" style="font-size: 0.8rem; margin-left: 0.3rem;"></i>
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 4: Introducción al Tema (2 min - TOTAL 5 min) -->
+            <!-- Slide 4: Definición y Evolución (2 min - TOTAL 5 min) -->
             <div class="slide" data-slide="4">
                 <div class="slide-content">
-                    <h2 class="slide-heading">Evolución de la Periodización</h2>
-                    <div class="content-box">
-                        <p class="slide-text">
-                            <strong>Dantas et al. (2022) en Retos:</strong> "La periodización es un sistema metodológico
-                            que distribuye los contenidos de entrenamiento según disponibilidad de recursos y principios
-                            científicos."
-                        </p>
+                    <h2 class="slide-heading">¿Qué es la Periodización?</h2>
+                    
+                    <div class="highlight-box" style="background: linear-gradient(135deg, #E6F3FF 0%, #D0E8FF 100%); border-left: 5px solid #0066CC;">
+                        <i class="fa-solid fa-book-open"></i>
+                        <div>
+                            <p style="font-size: 1.3rem; line-height: 1.7; margin-bottom: 1rem;">
+                                <strong>Definición:</strong> Sistema metodológico que <strong>distribuye los contenidos del entrenamiento</strong> a lo largo del tiempo disponible para <strong>optimizar el rendimiento</strong> y alcanzar objetivos intermedios.
+                            </p>
+                            <p style="font-size: 1.1rem; color: #555;">
+                                División organizada del entrenamiento anual/bianual para que el atleta logre su <strong>forma deportiva</strong> (estado de preparación óptima) en momentos específicos de la temporada competitiva.
+                            </p>
+                        </div>
                     </div>
+                    
                     <div class="two-columns" style="margin-top: 2rem;">
                         <div class="column">
-                            <h3><i class="fa-solid fa-timeline"></i> Evolución Histórica</h3>
-                            <ul>
-                                <li><strong>Antigua Grecia:</strong> Primeros ciclos</li>
-                                <li><strong>1950s:</strong> Matveev (modelo clásico)</li>
-                                <li><strong>1980s:</strong> Verkhoshansky (bloques)</li>
-                                <li><strong>2000s:</strong> Modelos contemporáneos</li>
-                            </ul>
+                            <div class="content-box" style="background: #FFF5F2;">
+                                <h3 style="color: var(--ieu-orange); margin-bottom: 1rem;">
+                                    <i class="fa-solid fa-timeline"></i> Evolución Histórica
+                                </h3>
+                                <ul style="font-size: 1.1rem; line-height: 1.8;">
+                                    <li><strong>1950s:</strong> Matveev (modelo clásico)</li>
+                                    <li><strong>1980s:</strong> Verkhoshansky (bloques)</li>
+                                    <li><strong>2000s:</strong> Issurin (ATR), Platonov</li>
+                                    <li><strong>Hoy:</strong> Adaptación individualizada</li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="column">
-                            <h3><i class="fa-solid fa-trophy"></i> Contexto Actual</h3>
-                            <ul>
-                                <li>Deporte profesionalizado</li>
-                                <li>Múltiples competencias/año</li>
-                                <li>Alto nivel comercial</li>
-                                <li>Necesidad de flexibilidad</li>
-                            </ul>
+                            <div class="content-box" style="background: #FFF9E6;">
+                                <h3 style="color: #0066CC; margin-bottom: 1rem;">
+                                    <i class="fa-solid fa-trophy"></i> Contexto Actual
+                                </h3>
+                                <ul style="font-size: 1.1rem; line-height: 1.8;">
+                                    <li>Deporte <strong>profesionalizado y comercial</strong></li>
+                                    <li>Múltiples competencias al año</li>
+                                    <li>Necesidad de picos repetidos</li>
+                                    <li>Flexibilidad y adaptabilidad</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 5: El Legado de Matveev (2.5 min - TOTAL 7.5 min) -->
+            <!-- Slide 5: Los 3 Pilares de Matveev (2.5 min - TOTAL 7.5 min) -->
             <div class="slide" data-slide="5">
                 <div class="slide-content">
-                    <h2 class="slide-heading">Modelo Clásico de Matveev</h2>
-                    <div class="highlight-box">
+                    <h2 class="slide-heading">Modelo Clásico de Matveev (1950s)</h2>
+                    
+                    <div class="highlight-box" style="background: linear-gradient(135deg, #FFF5F2 0%, #FFE8E0 100%);">
                         <i class="fa-solid fa-book-bookmark"></i>
-                        <p><strong>Lev Pavlovich Matveev (1958):</strong> Diseñado para los Juegos Olímpicos,
-                            enfocándose en <strong>una sola gran cima</strong> de rendimiento cada 4 años.</p>
+                        <p style="font-size: 1.2rem;"><strong>Lev Pavlovich Matveev (1958):</strong> Marco de referencia para sistemas actuales. Diseñado para lograr <strong>forma deportiva óptima</strong> en momentos específicos (Juegos Olímpicos cada 4 años).</p>
                     </div>
-                    <div class="steps-container">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <h3>Preparatorio</h3>
-                            <p>General → Específico<br>↑ Volumen<br>↓ Intensidad</p>
+                    
+                    <h3 style="color: var(--ieu-orange); margin-top: 2rem; margin-bottom: 1.5rem; text-align: center;">
+                        <i class="fa-solid fa-columns"></i> Los 3 Pilares Fundamentales
+                    </h3>
+                    
+                    <div class="two-columns" style="gap: 1.5rem;">
+                        <div class="column">
+                            <div class="content-box" style="background: #E6F3FF; border-left: 4px solid #0066CC; min-height: 350px;">
+                                <h4 style="color: #0066CC; margin-bottom: 1rem;">
+                                    <i class="fa-solid fa-1"></i> División por Periodos
+                                </h4>
+                                <ul style="font-size: 1.05rem; line-height: 1.8;">
+                                    <li><strong>Preparatorio:</strong> 
+                                        <ul><li>Fase General (base física)</li>
+                                        <li>Fase Específica (deporte)</li></ul>
+                                    </li>
+                                    <li><strong>Competición:</strong> Pico de forma</li>
+                                    <li><strong>Transición:</strong> Recuperación activa</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="content-box" style="background: #FFE8E0; border-left: 4px solid var(--ieu-orange); margin-top: 1rem; min-height: 280px;">
+                                <h4 style="color: var(--ieu-orange); margin-bottom: 1rem;">
+                                    <i class="fa-solid fa-3"></i> Dinámica de Cargas
+                                </h4>
+                                <p style="font-size: 1.05rem; line-height: 1.7;">
+                                    Alternancia <strong>Volumen ⇄ Intensidad</strong>:<br>
+                                    • <strong>Preparación:</strong> ↑ Volumen, ↓ Intensidad<br>
+                                    • <strong>Competencia:</strong> ↓ Volumen, ↑ Intensidad
+                                </p>
+                                <img src="../assets/volumen_vs_intensidad.png" alt="Volumen vs Intensidad" style="width: 100%; margin-top: 1rem; border-radius: 8px;">
+                            </div>
                         </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <h3>Competitivo</h3>
-                            <p>Pico de forma<br>↓ Volumen<br>↑ Intensidad</p>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <h3>Transitorio</h3>
-                            <p>Recuperación<br>Activa/Pasiva<br>Regeneración</p>
+                        
+                        <div class="column">
+                            <div class="content-box" style="background: #FFF9E6; border-left: 4px solid #FFD700; min-height: 640px;">
+                                <h4 style="color: #FF8C00; margin-bottom: 1rem;">
+                                    <i class="fa-solid fa-2"></i> Estructura Cíclica
+                                </h4>
+                                <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem;">
+                                    Organización en unidades temporales:
+                                </p>
+                                <ul style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem;">
+                                    <li><strong>Macrociclo:</strong> Anual o semestral (6-12 meses)</li>
+                                    <li><strong>Mesociclo:</strong> Mensual (3-6 semanas)</li>
+                                    <li><strong>Microciclo:</strong> Semanal (5-10 días)</li>
+                                </ul>
+                                <img src="../assets/estructura_ciclica_matveev.png" alt="Estructura Cíclica" style="width: 100%; border-radius: 8px;">
+                            </div>
                         </div>
                     </div>
-                    <p class="slide-text" style="margin-top: 2rem; text-align: center;">
-                        <strong>Principio fundamental:</strong> "El deportista NO puede estar siempre en forma máxima"
-                    </p>
+                    
+                    <div class="highlight-box" style="margin-top: 1.5rem; background: #f0f0f0; border-left: 5px solid var(--ieu-dark);">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <p style="font-size: 1.2rem;"><strong>Principio clave:</strong> "El deportista NO puede estar siempre en forma máxima. La forma deportiva es <strong>dialéctica y cíclica</strong>."</p>
+                    </div>
                 </div>
             </div>
 
