@@ -122,6 +122,7 @@ function submitAnswer(optionIdx) {
     });
 
     document.getElementById('feedback-msg').textContent = "Respuesta enviada...";
+    playSound('click');
 
     // Send to Firebase
     db.ref(`players/${myPlayerId}/lastAnswer`).set(optionIdx);
@@ -299,17 +300,42 @@ function showReveal(idx) {
     });
 
     // Check my answer
-    db.ref(`players/${myPlayerId}/lastAnswer`).once('value', s => {
-        const myAns = s.val();
+    if (!isAdmin) {
+        db.ref(`players/${myPlayerId}/lastAnswer`).once('value', s => {
+            const myAns = s.val();
+            const msg = document.getElementById('feedback-msg');
+            if (myAns === q.correct) {
+                msg.textContent = "¡CORRECTO! +100 puntos 🎉";
+                msg.style.color = "#4CAF50";
+                playSound('success'); // Alumno festeja su acierto
+            } else {
+                msg.textContent = "Incorrecto 😢";
+                msg.style.color = "#F44336";
+            }
+        });
+    } else {
+        // Admin: Limpiar mensaje o poner algo neutro
         const msg = document.getElementById('feedback-msg');
-        if (myAns === q.correct) {
-            msg.textContent = "¡CORRECTO! +100 puntos 🎉";
-            msg.style.color = "#4CAF50";
-        } else {
-            msg.textContent = "Incorrecto 😢";
-            msg.style.color = "#F44336";
-        }
-    });
+        msg.textContent = "";
+        msg.style.display = 'none';
+
+        // Sonido de revelación global para la proyección (Festejo)
+        playSound('cheer');
+    }
+}
+
+// --- AUDIO FX ---
+const sounds = {
+    click: new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'),
+    cheer: new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3'),
+    reveal: new Audio('https://www.soundjay.com/misc/sounds/magic-chime-01.mp3')
+};
+
+function playSound(type) {
+    if (sounds[type]) {
+        sounds[type].currentTime = 0;
+        sounds[type].play().catch(e => console.log("Audio play blocked (user must interact first)", e));
+    }
 }
 
 // --- ADMIN LOGIC ---
