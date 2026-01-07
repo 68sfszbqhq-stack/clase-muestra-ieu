@@ -78,10 +78,9 @@ class SportsAI {
         `;
 
         const MODELS_TO_TRY = [
-            'gemini-1.5-pro-latest', // Alias robusto
-            'gemini-1.5-flash-latest',
-            'gemini-pro',
-            'gemini-2.0-flash-exp'
+            'gemini-1.5-flash',      // ESTÁNDAR ORO (Rápido y Estable)
+            'gemini-2.0-flash-exp',  // Nueva Generación (Si tienes acceso)
+            'gemini-1.5-pro'         // Mayor razonamiento
         ];
 
         let lastError = null;
