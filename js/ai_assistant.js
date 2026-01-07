@@ -77,60 +77,50 @@ class SportsAI {
             "grid_type" -> "1", "2" o "3".
         `;
 
-        const MODELS_TO_TRY = [
-            'gemini-1.5-pro-latest', // El único que suele funcionar en cuentas "fresh"
-            'gemini-2.0-flash-exp'   // Tu única alternativa confirmada (Cuidado con cuota)
-        ];
+        // MODELO FORZADO (Solicitud directa)
+        const MODEL_NAME = "gemini-1.5-flash";
 
-        let lastError = null;
+        try {
+            console.log(`📡 Conectando exclusivamente con: ${MODEL_NAME}...`);
 
-        for (const model of MODELS_TO_TRY) {
-            try {
-                console.log(`📡 Intentando conectar con modelo: ${model}...`);
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${USER_API_KEY}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: aiPrompt }]
-                        }]
-                    })
-                });
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${USER_API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: aiPrompt }]
+                    }]
+                })
+            });
 
-                if (!response.ok) {
-                    const errData = await response.json();
+            if (!response.ok) {
+                const errData = await response.json();
 
-                    // DETECTOR DE KEY INVÁLIDA
-                    // Si la key expiró o es inválida, no tiene sentido probar otros modelos.
-                    if (errData.error?.message?.includes("API key") || response.status === 400) {
-                        alert("🚫 TU API KEY HA EXPIRADO O ES INVÁLIDA.\n\nEl sistema la borrará ahora. Por favor, recarga e ingresa una nueva.");
-                        localStorage.removeItem('lms_gemini_key');
-                        location.reload(); // Recarga forzosa para limpiar estado
-                        return null;
-                    }
-
-                    throw new Error(errData.error?.message || `Error ${response.status}`);
+                // DETECTOR DE KEY INVÁLIDA
+                if (errData.error?.message?.includes("API key") || response.status === 400) {
+                    alert("🚫 TU API KEY HA EXPIRADO O ES INVÁLIDA.\n\nEl sistema la borrará ahora. Recarga e ingresa una nueva.");
+                    localStorage.removeItem('lms_gemini_key');
+                    location.reload();
+                    return null;
                 }
 
-                const data = await response.json();
-
-                // Parsear respuesta
-                let rawText = data.candidates[0].content.parts[0].text;
-                rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-
-                return JSON.parse(rawText);
-
-            } catch (error) {
-                console.warn(`❌ Falló modelo ${model}:`, error.message);
-                lastError = error;
-                // Esperar 2.5s antes de reintentar para enfriar la API
-                await new Promise(r => setTimeout(r, 2500));
+                throw new Error(errData.error?.message || `Error ${response.status}`);
             }
-        }
 
-        // Si llegamos aquí, todos los modelos fallaron. Usamos FALLBACK LOCAL.
-        console.warn(`⚠️ API Falló (${lastError?.message}). Activando Cerebro Local.`);
-        return this.localAnalysis(sportName);
+            const data = await response.json();
+
+            // Parsear respuesta
+            let rawText = data.candidates[0].content.parts[0].text;
+            rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+            return JSON.parse(rawText);
+
+        } catch (error) {
+            console.error(`❌ Error Fatal en ${MODEL_NAME}:`, error.message);
+            // Si falla el forzado, vamos directo al local
+            console.warn(`⚠️ Falló el modelo forzado. Activando Cerebro Local.`);
+            return this.localAnalysis(sportName);
+        }
     }
 
     static localAnalysis(sport) {
