@@ -50,10 +50,9 @@ class SportsAI {
         `;
 
         const MODELS_TO_TRY = [
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash',
-            'gemini-1.0-pro',
-            'gemini-2.0-flash-exp'
+            'gemini-pro',            // Alias Universal (Suele ser v1.0 o 1.5 estable)
+            'gemini-1.5-flash',      // Rápido y barato
+            'gemini-2.0-flash-exp'   // Experimental (potente pero con cuota estricta)
         ];
 
         let lastError = null;
