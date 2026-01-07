@@ -78,9 +78,10 @@ class SportsAI {
         `;
 
         const MODELS_TO_TRY = [
-            'gemini-pro',            // Alias Universal (Suele ser v1.0 o 1.5 estable)
-            'gemini-1.5-flash',      // Rápido y barato
-            'gemini-2.0-flash-exp'   // Experimental (potente pero con cuota estricta)
+            'gemini-1.5-pro-latest', // Alias robusto
+            'gemini-1.5-flash-latest',
+            'gemini-pro',
+            'gemini-2.0-flash-exp'
         ];
 
         let lastError = null;
@@ -124,7 +125,8 @@ class SportsAI {
             } catch (error) {
                 console.warn(`❌ Falló modelo ${model}:`, error.message);
                 lastError = error;
-                // Continuamos al siguiente modelo...
+                // Esperar 1.5s antes de reintentar para no saturar
+                await new Promise(r => setTimeout(r, 1500));
             }
         }
 
