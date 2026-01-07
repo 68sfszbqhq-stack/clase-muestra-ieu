@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --cell-width: 60px;
-            /* Más ancho para texto */
+            --cell-width: 45px;
+            /* Ajuste para fechas verticales */
             --header-height: 40px;
-            --row-height: 60px;
-            --label-width: 140px;
+            --row-height: 40px;
+            /* Filas unpoco más compactas */
+            --label-width: 160px;
         }
 
         body {
@@ -116,6 +117,19 @@
             content: '+';
             color: #ddd;
             font-size: 1.5rem;
+        }
+
+        /* TEXTO VERTICAL PARA FECHAS */
+        .cell-date {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 0.65rem;
+            line-height: var(--cell-width);
+            text-align: center;
+            white-space: nowrap;
+            padding: 5px 0;
+            background: #fff;
+            color: #555;
         }
 
         /* MENÚ FLOTANTE DE OPCIONES */
@@ -222,6 +236,46 @@
             border-left: 4px solid #BF360C;
         }
 
+        /* OPTS EVALUACIONES */
+        .opt-eval {
+            background: #FF1744;
+            color: white;
+            border: none;
+            font-size: 0.6rem;
+            text-align: center;
+        }
+
+        /* OPTS TORNEOS */
+        .opt-gold {
+            background: #FFD700;
+            border: 1px solid #DAA520;
+        }
+
+        /* Final */
+        .opt-silver {
+            background: #FFCC80;
+            border: 1px solid #FB8C00;
+        }
+
+        /* Nacional */
+        .opt-bronze {
+            background: #C8E6C9;
+            border: 1px solid #2E7D32;
+        }
+
+        /* Local */
+
+        /* ESTILOS ESPECÍFICOS DE FILAS */
+        tr[data-section="competencia"] td {
+            height: 30px;
+        }
+
+        tr[data-section="tiempo"] td {
+            background: #fdfdfd;
+            font-weight: bold;
+            color: #444;
+        }
+
         /* Borrar */
         .opt-clear {
             background: #fff;
@@ -234,7 +288,7 @@
 <body>
 
     <div class="toolbar">
-        <div><i class="fa-solid fa-list-check"></i> Planificador Técnico</div>
+        <div><i class="fa-solid fa-list-check"></i> Planificador de Temporada</div>
         <div>
             <button class="btn"
                 style="background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;"
@@ -248,8 +302,8 @@
         <table id="matrix">
             <thead>
                 <tr>
-                    <th class="row-header">SEMANA</th>
-                    <!-- JS generará th 1..52 -->
+                    <th class="row-header" style="z-index: 40;">MESES</th>
+                    <!-- JS inyectará Meses -->
                 </tr>
             </thead>
             <tbody id="matrix-body">
@@ -258,69 +312,107 @@
         </table>
     </div>
 
-    <!-- MENÚ CONTEXTUAL -->
+    <!-- MENÚ -->
     <div id="options-menu">
-        <div class="menu-title" id="menu-title">Selecciona Fase</div>
+        <div class="menu-title" id="menu-title">Opción</div>
         <div id="menu-options"></div>
     </div>
 
     <script>
         const WEEKS = 52;
+
+        // ESTRUCTURA COMPLETA BASADA EN TU IMAGEN
         const ROWS = [
-            { id: 'period', label: 'Etapa', type: 'period' },
-            { id: 'strength', label: 'Fuerza', type: 'strength' },
-            { id: 'resistance', label: 'Resistencia', type: 'resistance' }
+            // SECCIÓN 1: COMPETENCIA
+            { id: 'eval', label: 'Evaluaciones', type: 'eval', section: 'competencia' },
+            { id: 'tour_final', label: 'Torneo Final', type: 'tour_grade', section: 'competencia' },
+            { id: 'tour_nac', label: 'Torneo Nacional', type: 'tour_grade', section: 'competencia' },
+            { id: 'tour_loc', label: 'Torneo Local', type: 'tour_grade', section: 'competencia' },
+
+            // SECCIÓN 2: CRONOGRAMA
+            { id: 'date', label: 'Fecha (Lunes)', type: 'readonly', style: 'cell-date', section: 'tiempo' },
+            { id: 'micro', label: 'Microciclo', type: 'readonly', val: (i) => i, section: 'tiempo' },
+            { id: 'meso', label: 'Mesociclo', type: 'meso', val: (i) => Math.ceil(i / 4), section: 'tiempo' }, // Aprox 4 semanas
+
+            // SECCIÓN 3: PERIODIZACIÓN (Lo que ya teníamos)
+            { id: 'period', label: 'Periodos', type: 'period' },
+            { id: 'strength', label: 'Cap. Fuerza', type: 'strength' },
+            { id: 'resistance', label: 'Cap. Resistencia', type: 'resistance' },
+            { id: 'speed', label: 'Cap. Velocidad', type: 'speed' }
         ];
 
-        // Definición de Contenidos por Tipo de Fila
+        // OPCIONES DESPLEGABLES
         const OPTIONS = {
+            eval: [
+                { label: "Test Físico", class: "opt-eval" },
+                { label: "Test Médico", class: "opt-eval" },
+                { label: "Control", class: "opt-eval" }
+            ],
+            tour_grade: [
+                { label: "Competencia", class: "opt-gold" },
+                { label: "Preparatoria", class: "opt-silver" },
+                { label: "Liga/Regular", class: "opt-bronze" }
+            ],
             period: [
-                { label: "Prep. General", class: "opt-gral" },
-                { label: "Prep. Específica", class: "opt-esp" },
-                { label: "Pre-Competitivo", class: "opt-pre" },
+                { label: "P. General", class: "opt-gral" },
+                { label: "P. Específica", class: "opt-esp" },
+                { label: "Pre-Comp.", class: "opt-pre" },
                 { label: "Competitivo", class: "opt-comp" },
                 { label: "Transición", class: "opt-trans" }
             ],
             strength: [
-                { label: "Adapt. Anatómica", class: "opt-adap" },
+                { label: "Adap. Anatómica", class: "opt-adap" },
                 { label: "Hipertrofia", class: "opt-hiper" },
-                { label: "Fuerza Máxima", class: "opt-fmax" },
+                { label: "Fuerza Máx.", class: "opt-fmax" },
                 { label: "Potencia", class: "opt-pot" }
             ],
             resistance: [
-                { label: "Aeróbico Ligero", class: "opt-aero1" },
-                { label: "Aeróbico Medio", class: "opt-aero2" },
-                { label: "Anaeróbico Lác.", class: "opt-anaer" }
+                { label: "Aeróbico 1", class: "opt-aero1" },
+                { label: "Aeróbico 2", class: "opt-aero2" },
+                { label: "Anaeróbico", class: "opt-anaer" }
+            ],
+            speed: [
+                { label: "Reacción", class: "opt-pot" }, // Reciclamos color
+                { label: "Aceleración", class: "opt-pot" },
+                { label: "Vel. Máxima", class: "opt-pot" }
             ]
         };
 
+        const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
         let activeCell = null;
 
         window.onload = function () {
             renderMatrix();
-
-            // Cerrar menú al hacer click fuera
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#options-menu') && !e.target.classList.contains('cell')) {
-                    hideMenu();
-                }
-            });
+            setupMenuClose();
         };
 
         function renderMatrix() {
             const thead = document.querySelector('#matrix thead tr');
             const tbody = document.getElementById('matrix-body');
 
-            // 1. Headers Semanas
-            for (let i = 1; i <= WEEKS; i++) {
-                const th = document.createElement('th');
-                th.innerText = i;
-                thead.appendChild(th);
-            }
+            // 1. Headers de Meses (Agrupados cada 4 aprox)
+            // Lógica simple: 52 semanas / 12 meses = 4.33. Usaremos patrón 4-4-5
+            let w = 0;
+            MONTHS.forEach((m, idx) => {
+                let span = (idx % 3 === 2) ? 5 : 4; // Patrón 4-4-5 para llenar 52
+                if (w + span > WEEKS) span = WEEKS - w;
 
-            // 2. Filas
+                const th = document.createElement('th');
+                th.innerText = m;
+                th.colSpan = span;
+                th.style.background = "#333";
+                th.style.color = "white";
+                thead.appendChild(th);
+                w += span;
+            });
+
+            // Fecha Inicio (Simulada: Lunes 2 Ene)
+            let currDate = new Date(new Date().getFullYear(), 0, 2);
+
+            // 2. Render Filas
             ROWS.forEach(row => {
                 const tr = document.createElement('tr');
+                tr.dataset.section = row.section || 'data';
 
                 // Header Fila
                 const th = document.createElement('th');
@@ -329,38 +421,67 @@
                 tr.appendChild(th);
 
                 // Celdas
+                let tempDate = new Date(currDate); // Copia para fechas
+
                 for (let i = 1; i <= WEEKS; i++) {
                     const td = document.createElement('td');
-                    td.className = 'cell';
+                    td.className = 'cell ' + (row.style || '');
                     td.dataset.rowType = row.type;
-                    td.onclick = (e) => showMenu(e, td);
+
+                    // Lógica Readonly vs Interactiva
+                    if (row.type === 'readonly') {
+                        if (row.style === 'cell-date') {
+                            // Formato dd/mm
+                            td.innerText = `${tempDate.getDate()}/${tempDate.getMonth() + 1}`;
+                            tempDate.setDate(tempDate.getDate() + 7);
+                        } else {
+                            td.innerText = row.val(i);
+                        }
+                        td.style.cursor = "default";
+                        td.style.background = "#fafafa";
+                    } else if (row.type === 'meso') {
+                        td.innerText = row.val(i); // Editable pero con valor default
+                        td.onclick = (e) => showMenu(e, td);
+                    } else {
+                        td.onclick = (e) => showMenu(e, td);
+                    }
+
                     tr.appendChild(td);
                 }
                 tbody.appendChild(tr);
             });
         }
 
+        function setupMenuClose() {
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('options-menu');
+                if (menu.style.display === 'block' && !e.target.closest('#options-menu') && !e.target.classList.contains('cell')) {
+                    hideMenu();
+                }
+            });
+        }
+
         function showMenu(e, cell) {
-            e.stopPropagation(); // Evitar cierre inmediato
+            if (cell.dataset.rowType === 'readonly') return; // Bloquear
+
+            e.stopPropagation();
             activeCell = cell;
             const type = cell.dataset.rowType;
             const menu = document.getElementById('options-menu');
             const list = document.getElementById('menu-options');
             const title = document.getElementById('menu-title');
 
-            // Llenar opciones
             list.innerHTML = '';
 
-            // Opción Limpiar
+            // Botón Limpiar
             const clearBtn = document.createElement('div');
             clearBtn.className = 'option-item opt-clear';
             clearBtn.innerHTML = '<i class="fa-solid fa-eraser"></i> Limpiar';
             clearBtn.onclick = () => selectOption(null, null);
             list.appendChild(clearBtn);
 
-            // Opciones Reales
             if (OPTIONS[type]) {
-                title.innerText = "Opciones para " + type.toUpperCase();
+                title.innerText = "Seleccionar:";
                 OPTIONS[type].forEach(opt => {
                     const item = document.createElement('div');
                     item.className = `option-item ${opt.class}`;
@@ -368,15 +489,24 @@
                     item.onclick = () => selectOption(opt.label, opt.class);
                     list.appendChild(item);
                 });
+            } else if (type === 'meso') {
+                // Opción especial manual para Mesos
+                // ...
+                title.innerText = "Mesociclo";
+                ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].forEach(num => { // Simple select
+                    const item = document.createElement('div');
+                    item.className = 'option-item';
+                    item.style.background = "#eee";
+                    item.innerText = "Meso " + num;
+                    item.onclick = () => selectOption(num, '');
+                    list.appendChild(item);
+                });
             }
 
-            // Posicionar Menú
             const rect = cell.getBoundingClientRect();
-            // Ajuste básico para que no se salga
             let top = rect.bottom + 5;
             let left = rect.left;
-
-            if (top + 200 > window.innerHeight) top = rect.top - 200; // Subir si no cabe abajo
+            if (top + 200 > window.innerHeight) top = rect.top - 200;
 
             menu.style.display = 'block';
             menu.style.top = top + 'px';
@@ -391,10 +521,19 @@
         function selectOption(label, cssClass) {
             if (activeCell) {
                 if (label) {
-                    activeCell.className = `cell ${cssClass}`;
-                    activeCell.innerText = label;
+                    activeCell.className = `cell ${cssClass || ''}`;
+                    // Para evaluaciones, ícono no texto largo
+                    if (activeCell.dataset.rowType === 'eval') {
+                        activeCell.innerHTML = '<div style="width:100%;height:100%;background:#D32F2F;"></div>';
+                    } else if (activeCell.dataset.rowType === 'tour_grade') {
+                        // Keep color block
+                        activeCell.innerHTML = '';
+                    } else {
+                        activeCell.innerText = label;
+                    }
                 } else {
                     activeCell.className = 'cell';
+                    activeCell.innerHTML = '';
                     activeCell.innerText = '';
                 }
             }
@@ -402,12 +541,7 @@
         }
 
         function resetAll() {
-            if (confirm("¿Borrar todo el plan?")) {
-                document.querySelectorAll('.cell').forEach(c => {
-                    c.className = 'cell';
-                    c.innerText = '';
-                });
-            }
+            if (confirm("¿Borrar todo?")) location.reload();
         }
     </script>
 </body>
