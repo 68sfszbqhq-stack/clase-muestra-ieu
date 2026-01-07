@@ -73,6 +73,16 @@ class SportsAI {
 
                 if (!response.ok) {
                     const errData = await response.json();
+
+                    // DETECTOR DE KEY INVÁLIDA
+                    // Si la key expiró o es inválida, no tiene sentido probar otros modelos.
+                    if (errData.error?.message?.includes("API key") || response.status === 400) {
+                        alert("🚫 TU API KEY HA EXPIRADO O ES INVÁLIDA.\n\nEl sistema la borrará ahora. Por favor, recarga e ingresa una nueva.");
+                        localStorage.removeItem('lms_gemini_key');
+                        location.reload(); // Recarga forzosa para limpiar estado
+                        return null;
+                    }
+
                     throw new Error(errData.error?.message || `Error ${response.status}`);
                 }
 
