@@ -181,10 +181,12 @@
             </div>
         </div>
 
-        <!-- 3. VISTA LABORATORIO (Iframe Integrado) -->
-        <div id="view-lab" class="view-section" style="height: 100%;">
+        <!-- 3. VISTA LABORATORIO (Iframe Absolute Fix) -->
+        <div id="view-lab" class="view-section"
+            style="position: relative; width: 100%; height: calc(100vh - 100px); min-height: 600px;">
             <!-- src vacío para lazy load -->
-            <iframe id="lab-frame" style="width:100%; height:80vh; border:none; border-radius:15px;"></iframe>
+            <iframe id="lab-frame"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none; border-radius:15px;"></iframe>
         </div>
 
         <!-- 4. VISTA COMUNIDAD (Foros) -->
