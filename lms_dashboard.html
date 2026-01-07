@@ -131,8 +131,8 @@
 
         <!-- 3. VISTA LABORATORIO (Iframe Integrado) -->
         <div id="view-lab" class="view-section" style="height: 100%;">
-            <iframe src="lab_macrocycle.html"
-                style="width:100%; height:80vh; border:none; border-radius:15px;"></iframe>
+            <!-- src vacío para lazy load -->
+            <iframe id="lab-frame" style="width:100%; height:80vh; border:none; border-radius:15px;"></iframe>
         </div>
 
         <!-- 4. VISTA COMUNIDAD (Foros) -->
@@ -218,7 +218,12 @@
 
             if (tabId === 'home') document.querySelector('.nav-links li:nth-child(1)').classList.add('active');
             if (tabId === 'community') document.querySelector('.nav-links li:nth-child(2)').classList.add('active');
-            if (tabId === 'lab') document.querySelector('.nav-links li:nth-child(3)').classList.add('active');
+            if (tabId === 'lab') {
+                document.querySelector('.nav-links li:nth-child(3)').classList.add('active');
+                // Lazy Load del Lab
+                const frame = document.getElementById('lab-frame');
+                if (!frame.getAttribute('src')) frame.src = "lab_macrocycle.html";
+            }
             if (tabId === 'profile') document.querySelector('.nav-links li:nth-child(4)').classList.add('active');
         }
 
