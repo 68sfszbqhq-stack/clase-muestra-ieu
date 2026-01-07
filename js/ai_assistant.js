@@ -33,42 +33,53 @@ class SportsAI {
             }
         `;
 
-        try {
-            // Usamos 'gemini-pro' (1.0), el estándar más compatible y seguro actualmente
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${USER_API_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: aiPrompt }]
-                    }]
-                })
-            });
+        const MODELS_TO_TRY = [
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-flash',
+            'gemini-1.0-pro',
+            'gemini-2.0-flash-exp'
+        ];
 
-            const data = await response.json();
+        let lastError = null;
 
-            if (data.error) {
-                console.error("AI Error:", data.error);
-                if (data.error.code === 429) {
-                    alert("⏳ La IA está saturada (Límite de Cuota). Espera 30seg y reintenta.");
-                } else {
-                    alert("Error de IA: " + data.error.message);
+        for (const model of MODELS_TO_TRY) {
+            try {
+                console.log(`📡 Intentando conectar con modelo: ${model}...`);
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${USER_API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: aiPrompt }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error?.message || `Error ${response.status}`);
                 }
-                return null;
+
+                const data = await response.json();
+
+                // Parsear respuesta
+                let rawText = data.candidates[0].content.parts[0].text;
+                rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+                return JSON.parse(rawText); // ¡ÉXITO! Retornamos y salimos del bucle.
+
+            } catch (error) {
+                console.warn(`❌ Falló modelo ${model}:`, error.message);
+                lastError = error;
+                // Continuamos al siguiente modelo...
             }
-
-            // Parsear respuesta (Gemini a veces devuelve markdown en el texto)
-            let rawText = data.candidates[0].content.parts[0].text;
-            // Limpiar bloques de código si existen
-            rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-
-            return JSON.parse(rawText);
-
-        } catch (error) {
-            console.error("Network Error:", error);
-            alert("Error de conexión con la IA.");
-            return null;
         }
+
+        // Si llegamos aquí, todos fallaron
+        if (lastError) {
+            alert(`⚠️ No se pudo conectar con ninguna IA.\nError final: ${lastError.message}`);
+        }
+        return null;
     }
 
     static resetKey() {
