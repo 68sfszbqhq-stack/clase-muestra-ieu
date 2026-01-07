@@ -17,20 +17,48 @@ class SportsAI {
         }
 
         const aiPrompt = `
-            Actúa como un Experto Metodólogo Deportivo de Alto Rendimiento.
-            Vas a planificar el macrociclo para el deporte: "${sportName}".
-            Genera un REPORTE TÉCNICO COMPLETO basado rigurosamente en estos 8 FUNDAMENTOS:
+            Actúa como un DOCTOR EN CIENCIAS DEL DEPORTE Y METODOLOGÍA DEL ENTRENAMIENTO.
+            El usuario es un entrenador en formación. Tu misión es generar un INFORME CIENTÍFICO-PEDAGÓGICO detallado para planificar la temporada de: "${sportName}".
 
-            1. Análisis Inicial: Perfil fisiológico y antropométrico ideal.
-            2. Clasificación: Cíclico o Acíclico (y por qué).
-            3. Sistemas Energéticos: Identificar el predominante (ATP-PC, Glucolítico, Oxidativo) y los secundarios.
-            4. Capacidades Físicas: Ordenar por prioridad (Fuerza, Velocidad, Resistencia, Flexibilidad).
-            5. Objetivos y Calendario: Propuesta de picos de forma (1, 2 o 3 cimas).
-            6. Periodización: Sugerencia de modelo (Tradicional, ATR, Bloques) y fases críticas.
-            7. Distribución de Cargas: Principios de volumen vs intensidad para este deporte.
-            8. Selección de Medios: Ejemplos de ejercicios específicos (Generales vs Específicos).
+            ESTRUCTURA OBLIGATORIA DEL INFORME (Formato Markdown):
 
-            Responde ÚNICAMENTE en este formato JSON válido:
+            # 1. ANÁLISIS DEL DEPORTISTA Y LA DISCIPLINA 🧬
+            - **Diagnóstico Fisiológico:** Describe el morfotipo ideal, fibras musculares predominantes (Tipo I, IIa, IIx) y demandas biomecánicas.
+            - **Perfil de Entrada:** Sugiere qué evaluaciones iniciales son imprescindibles (ej: Test de Cooper, RM, Postura).
+
+            # 2. CLASIFICACIÓN DEPORTIVA 📊
+            - Define si es Cíclico, Acíclico o Mixto.
+            - Justifica basándote en la *variabilidad motriz* y la *incertidumbre del entorno*.
+
+            # 3. BIOENERGÉTICA APLICADA ⚡
+            - **Sistema Dominante:** (ATP-PC, Glucolítico o Oxidativo). Explica la relación Potencia vs Capacidad.
+            - **Interacción de Sistemas:** ¿Cómo participan los otros sistemas durante la competencia real?
+
+            # 4. CAPACIDADES DETERMINANTES 🏋️
+            - Jerarquiza: 1. Fundamental, 2. Complementaria, 3. Derivada.
+            - Justifica cada una (ej: "La fuerza explosiva es clave por...").
+
+            # 5. OBJETIVOS Y PICOS DE FORMA 🎯
+            - Propuesta de Cronograma: ¿Cuántos Macrociclos? (Mono, Bi o Tricíclico) según el calendario típico de este deporte.
+            - Justificación de la puesta a punto (Tapering).
+
+            # 6. MODELO DE PERIODIZACIÓN SUGERIDO 📅
+            - Recomienda un modelo (Tradicional Matveyev, ATR, Bloques Verkhoshansky).
+            - Argumenta por qué ese modelo se ajusta a las adaptaciones biológicas de este deporte.
+
+            # 7. DINÁMICA DE LAS CARGAS 📈
+            - Principios de Progresión: Volumen vs Intensidad en Pretemporada y Competencia.
+            - Densidad del estímulo: Relación Trabajo/Descanso sugerida.
+
+            # 8. SELECCIÓN DE MEDIOS Y MÉTODOS 🛠️
+            - Ejemplos concretos de ejercicios:
+              * **Generales:** Para base.
+              * **Específicos:** Transferencia directa.
+              * **Competitivos:** Situación real.
+
+            ---
+            
+            SALIDA JSON REQUERIDA:
             {
                 "technical_data": {
                     "type": "...", 
@@ -38,15 +66,15 @@ class SportsAI {
                     "priority": "...",
                     "grid_type": "..." 
                 },
-                "summary": "Resumen de 1 linea del enfoque pedagógico.",
-                "full_report": "Aquí escribe el reporte detallado de los 8 puntos usando formato Markdown (usa saltos de línea \\n). Sé profesional, académico y directo."
+                "summary": "Frase contundente que resuma la estrategia metodológica.",
+                "full_report": "TU INFORME CIENTÍFICO COMPLETO AQUÍ (Usa Markdown riguroso)."
             }
             
-            Nota: 
-            - "type" debe ser "ciclico" o "aciclico".
-            - "energy" debe ser "atp-pc", "glucolitico", "oxidativo" o "mixto".
-            - "priority" debe ser "fuerza", "velocidad", "resistencia" o "tecnica".
-            - "grid_type" debe ser "1", "2" o "3" (picos).
+            Nota técnica para JSON:
+            "type" -> "ciclico" / "aciclico".
+            "energy" -> "atp-pc" / "glucolitico" / "oxidativo" / "mixto".
+            "priority" -> "fuerza" / "velocidad" / "resistencia" / "tecnica".
+            "grid_type" -> "1", "2" o "3".
         `;
 
         const MODELS_TO_TRY = [
