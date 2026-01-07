@@ -4,101 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio: Matriz de Macrociclo</title>
+    <title>Laboratorio: Matriz Técnica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --cell-width: 30px;
+            --cell-width: 60px;
+            /* Más ancho para texto */
             --header-height: 40px;
-            --row-height: 50px;
-            --label-width: 150px;
+            --row-height: 60px;
+            --label-width: 140px;
         }
 
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f4f4f4;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+            user-select: none;
         }
 
-        /* TOOLBAR SUPERIOR */
+        /* TOOLBAR */
         .toolbar {
-            background: #333;
+            background: #2c3e50;
             color: white;
             padding: 10px 20px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            flex-shrink: 0;
+            justify-content: space-between;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
         }
 
-        .tool-group {
-            display: flex;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px;
-            border-radius: 8px;
-        }
-
-        .tool-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: white;
-            transition: 0.2s;
-        }
-
-        .tool-btn:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
-        }
-
-        .tool-btn.active {
-            outline: 2px solid white;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            font-weight: bold;
-        }
-
-        /* Colores de Herramientas */
-        .color-gral {
-            background: #90CAF9;
-            color: #0D47A1;
-        }
-
-        /* Azul */
-        .color-esp {
-            background: #A5D6A7;
-            color: #1B5E20;
-        }
-
-        /* Verde */
-        .color-comp {
-            background: #EF9A9A;
-            color: #B71C1C;
-        }
-
-        /* Rojo */
-        .color-trans {
-            background: #CE93D8;
-            color: #4A148C;
-        }
-
-        /* Morado */
-        .color-eraser {
-            background: #777;
-            color: white;
-        }
-
-        /* MATRIZ SCROLLABLE */
+        /* MATRIZ */
         .matrix-container {
             flex: 1;
             overflow: auto;
@@ -110,98 +50,183 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .matrix-table {
-            border-collapse: collapse;
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
             table-layout: fixed;
         }
 
-        /* Cabeceras */
         th,
         td {
             border: 1px solid #ddd;
             text-align: center;
-            font-size: 0.8rem;
-            overflow: hidden;
-            white-space: nowrap;
+            font-size: 0.75rem;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        .col-header {
-            width: var(--cell-width);
-            height: var(--header-height);
-            background: #eee;
-            font-weight: bold;
-            color: #555;
+        /* Sticky Headers */
+        thead th {
             position: sticky;
             top: 0;
             z-index: 10;
+            background: #eee;
+            height: var(--header-height);
         }
 
         .row-header {
-            width: var(--label-width);
-            height: var(--row-height);
-            background: #f9f9f9;
-            font-weight: bold;
-            text-align: left;
-            padding-left: 10px;
             position: sticky;
             left: 0;
             z-index: 20;
-            border-right: 2px solid #ccc;
+            background: #f9f9f9;
+            width: var(--label-width);
+            font-weight: bold;
+            border-right: 2px solid #bbb;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* Celda Interactiva */
+        /* Corner fix */
+        thead th:first-child {
+            left: 0;
+            z-index: 30;
+        }
+
+        /* CELDAS INTERACTIVAS */
         .cell {
             width: var(--cell-width);
             height: var(--row-height);
             cursor: pointer;
-            transition: background 0.1s;
+            transition: all 0.1s;
+            font-weight: 600;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px;
+            font-size: 0.7rem;
+            vertical-align: middle;
         }
 
         .cell:hover {
-            background: #f0f0f0;
+            background: #eef;
+            outline: 2px solid #3498db;
+            z-index: 5;
         }
 
-        /* Clases pintadas */
-        .filled-gral {
-            background: #E3F2FD !important;
-            border-top: 3px solid #1E88E5 !important;
+        .cell:empty::before {
+            content: '+';
+            color: #ddd;
+            font-size: 1.5rem;
         }
 
-        .filled-esp {
-            background: #E8F5E9 !important;
-            border-top: 3px solid #43A047 !important;
-        }
-
-        .filled-comp {
-            background: #FFEBEE !important;
-            border-top: 3px solid #E53935 !important;
-        }
-
-        .filled-trans {
-            background: #F3E5F5 !important;
-            border-top: 3px solid #8E24AA !important;
-        }
-
-        /* Meses Header Grouping */
-        .month-header-cell {
-            background: #333;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Overlay Feedback */
-        #feedback-toast {
+        /* MENÚ FLOTANTE DE OPCIONES */
+        #options-menu {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #333;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 10px;
             display: none;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            font-size: 0.9rem;
-            z-index: 100;
+            z-index: 9999;
+            width: 200px;
+            border: 1px solid #ddd;
+        }
+
+        .menu-title {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .option-item {
+            padding: 8px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.1s;
+        }
+
+        .option-item:hover {
+            filter: brightness(0.95);
+            transform: translateX(3px);
+        }
+
+        /* ESTILOS DE BLOQUES TÉCNICOS */
+        /* Periodización */
+        .opt-gral {
+            background: #BBDEFB;
+            border-left: 4px solid #1976D2;
+        }
+
+        .opt-esp {
+            background: #C8E6C9;
+            border-left: 4px solid #388E3C;
+        }
+
+        .opt-pre {
+            background: #FFE0B2;
+            border-left: 4px solid #F57C00;
+        }
+
+        .opt-comp {
+            background: #FFCDD2;
+            border-left: 4px solid #D32F2F;
+        }
+
+        .opt-trans {
+            background: #E1BEE7;
+            border-left: 4px solid #7B1FA2;
+        }
+
+        /* Fuerza */
+        .opt-adap {
+            background: #F5F5F5;
+            border-left: 4px solid #9E9E9E;
+        }
+
+        .opt-hiper {
+            background: #D1C4E9;
+            border-left: 4px solid #512DA8;
+        }
+
+        .opt-fmax {
+            background: #C5E1A5;
+            border-left: 4px solid #33691E;
+        }
+
+        .opt-pot {
+            background: #FFF9C4;
+            border-left: 4px solid #FBC02D;
+        }
+
+        /* Resistencia */
+        .opt-aero1 {
+            background: #B3E5FC;
+            border-left: 4px solid #0288D1;
+        }
+
+        .opt-aero2 {
+            background: #81D4FA;
+            border-left: 4px solid #01579B;
+        }
+
+        .opt-anaer {
+            background: #FFCCBC;
+            border-left: 4px solid #BF360C;
+        }
+
+        /* Borrar */
+        .opt-clear {
+            background: #fff;
+            border: 1px dashed #ccc;
+            color: #d32f2f;
         }
     </style>
 </head>
@@ -209,153 +234,180 @@
 <body>
 
     <div class="toolbar">
-        <div style="font-weight:bold; font-size:1.1rem; margin-right:20px;">
-            <i class="fa-solid fa-table-cells"></i> Planificador 52 Semanas
+        <div><i class="fa-solid fa-list-check"></i> Planificador Técnico</div>
+        <div>
+            <button class="btn"
+                style="background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;"
+                onclick="resetAll()">
+                <i class="fa-solid fa-trash"></i> Reiniciar
+            </button>
         </div>
-
-        <div class="tool-group">
-            <button class="tool-btn color-gral active" onclick="setTool('gral')"><i class="fa-solid fa-layer-group"></i>
-                Prep. General</button>
-            <button class="tool-btn color-esp" onclick="setTool('esp')"><i class="fa-solid fa-dumbbell"></i> P.
-                Específica</button>
-            <button class="tool-btn color-comp" onclick="setTool('comp')"><i class="fa-solid fa-trophy"></i>
-                Competencia</button>
-            <button class="tool-btn color-trans" onclick="setTool('trans')"><i class="fa-solid fa-bed"></i>
-                Transición</button>
-            <button class="tool-btn color-eraser" onclick="setTool('eraser')"><i class="fa-solid fa-eraser"></i>
-                Borrar</button>
-        </div>
-
-        <div style="flex:1;"></div>
-
-        <button class="tool-btn" style="background:#2ecc71;" onclick="analyzeMatrix()">
-            <i class="fa-solid fa-check-circle"></i> Validar
-        </button>
     </div>
 
     <div class="matrix-container">
-        <table class="matrix-table" id="macro-table">
-            <!-- Se genera vía JS -->
+        <table id="matrix">
+            <thead>
+                <tr>
+                    <th class="row-header">SEMANA</th>
+                    <!-- JS generará th 1..52 -->
+                </tr>
+            </thead>
+            <tbody id="matrix-body">
+                <!-- JS generará filas -->
+            </tbody>
         </table>
     </div>
 
-    <div id="feedback-toast">Plan guardado...</div>
+    <!-- MENÚ CONTEXTUAL -->
+    <div id="options-menu">
+        <div class="menu-title" id="menu-title">Selecciona Fase</div>
+        <div id="menu-options"></div>
+    </div>
 
     <script>
         const WEEKS = 52;
         const ROWS = [
-            { id: 'period', label: 'Periodos' },
-            { id: 'strength', label: 'Fuerza' },
-            { id: 'resistance', label: 'Resistencia' },
-            { id: 'speed', label: 'Velocidad' },
-            { id: 'technique', label: 'Técnica/Táctica' }
+            { id: 'period', label: 'Etapa', type: 'period' },
+            { id: 'strength', label: 'Fuerza', type: 'strength' },
+            { id: 'resistance', label: 'Resistencia', type: 'resistance' }
         ];
-        const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-        let currentTool = 'gral';
-        let isDrawing = false;
+        // Definición de Contenidos por Tipo de Fila
+        const OPTIONS = {
+            period: [
+                { label: "Prep. General", class: "opt-gral" },
+                { label: "Prep. Específica", class: "opt-esp" },
+                { label: "Pre-Competitivo", class: "opt-pre" },
+                { label: "Competitivo", class: "opt-comp" },
+                { label: "Transición", class: "opt-trans" }
+            ],
+            strength: [
+                { label: "Adapt. Anatómica", class: "opt-adap" },
+                { label: "Hipertrofia", class: "opt-hiper" },
+                { label: "Fuerza Máxima", class: "opt-fmax" },
+                { label: "Potencia", class: "opt-pot" }
+            ],
+            resistance: [
+                { label: "Aeróbico Ligero", class: "opt-aero1" },
+                { label: "Aeróbico Medio", class: "opt-aero2" },
+                { label: "Anaeróbico Lác.", class: "opt-anaer" }
+            ]
+        };
 
-        window.onload = initMatrix;
+        let activeCell = null;
 
-        function initMatrix() {
-            const table = document.getElementById('macro-table');
-            let html = '';
+        window.onload = function () {
+            renderMatrix();
 
-            // 1. Fila de Meses (Agrupada aprox cada 4 semanas)
-            html += '<tr><th class="row-header month-header-cell">MESES</th>';
-            let weekCounter = 0;
-            MONTHS.forEach(m => {
-                // Simplificación: 4 semanas por mes + 4 semanas extra repartidas
-                // Haremos 4 semanas x mes para demo ràpida (48 sem) + 1 último mes largo
-                let colspan = 4;
-                if (weekCounter + colspan > WEEKS) colspan = WEEKS - weekCounter;
-                html += `<th colspan="${colspan}" class="month-header-cell">${m}</th>`;
-                weekCounter += colspan;
-            });
-            // Rellenar si falta
-            if (weekCounter < WEEKS) {
-                html += `<th colspan="${WEEKS - weekCounter}" class="month-header-cell">...</th>`;
-            }
-            html += '</tr>';
-
-            // 2. Fila de Semanas (Números)
-            html += '<tr><th class="row-header">Semana</th>';
-            for (let i = 1; i <= WEEKS; i++) {
-                html += `<th class="col-header">${i}</th>`;
-            }
-            html += '</tr>';
-
-            // 3. Filas de Datos
-            ROWS.forEach(row => {
-                html += `<tr>`;
-                html += `<th class="row-header">${row.label}</th>`;
-                for (let i = 1; i <= WEEKS; i++) {
-                    html += `<td class="cell" 
-                              onmousedown="startDraw(this)" 
-                              onmouseover="draw(this)" 
-                              onmouseup="endDraw()"
-                              data-week="${i}" 
-                              data-row="${row.id}"></td>`;
+            // Cerrar menú al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#options-menu') && !e.target.classList.contains('cell')) {
+                    hideMenu();
                 }
-                html += `</tr>`;
             });
+        };
 
-            table.innerHTML = html;
+        function renderMatrix() {
+            const thead = document.querySelector('#matrix thead tr');
+            const tbody = document.getElementById('matrix-body');
 
-            // Global mouse up para cortar el pintado si sales de la tabla
-            document.addEventListener('mouseup', endDraw);
-        }
-
-        function setTool(tool) {
-            currentTool = tool;
-            // Update UI
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`.tool-btn.color-${tool === 'eraser' ? 'eraser' : tool}`).classList.add('active'); // Corrección simple selector
-        }
-
-        function startDraw(cell) {
-            isDrawing = true;
-            paint(cell);
-        }
-
-        function draw(cell) {
-            if (isDrawing) paint(cell);
-        }
-
-        function endDraw() {
-            isDrawing = false;
-        }
-
-        function paint(cell) {
-            // Limpiar clases previas
-            cell.className = 'cell';
-
-            if (currentTool !== 'eraser') {
-                cell.classList.add(`filled-${currentTool}`);
-            }
-        }
-
-        function analyzeMatrix() {
-            // Lógica simple de constructivismo: Buscar si hay "Competencia"
-            const compCells = document.querySelectorAll('.filled-comp');
-            const gralCells = document.querySelectorAll('.filled-gral');
-            const toast = document.getElementById('feedback-toast');
-
-            toast.style.display = 'block';
-
-            if (compCells.length === 0) {
-                toast.style.background = '#C62828';
-                toast.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Error: No has programado ninguna COMPETENCIA.';
-            } else if (gralCells.length < 10) {
-                toast.style.background = '#F57C00';
-                toast.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Cuidado: Tu base general es muy pobre (< 10 semanas).';
-            } else {
-                toast.style.background = '#2E7D32';
-                toast.innerHTML = '<i class="fa-solid fa-check-circle"></i> Estructura válida. ¡Buen trabajo!';
-                // Aquí guardaríamos en Firebase
+            // 1. Headers Semanas
+            for (let i = 1; i <= WEEKS; i++) {
+                const th = document.createElement('th');
+                th.innerText = i;
+                thead.appendChild(th);
             }
 
-            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+            // 2. Filas
+            ROWS.forEach(row => {
+                const tr = document.createElement('tr');
+
+                // Header Fila
+                const th = document.createElement('th');
+                th.className = 'row-header';
+                th.innerText = row.label;
+                tr.appendChild(th);
+
+                // Celdas
+                for (let i = 1; i <= WEEKS; i++) {
+                    const td = document.createElement('td');
+                    td.className = 'cell';
+                    td.dataset.rowType = row.type;
+                    td.onclick = (e) => showMenu(e, td);
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showMenu(e, cell) {
+            e.stopPropagation(); // Evitar cierre inmediato
+            activeCell = cell;
+            const type = cell.dataset.rowType;
+            const menu = document.getElementById('options-menu');
+            const list = document.getElementById('menu-options');
+            const title = document.getElementById('menu-title');
+
+            // Llenar opciones
+            list.innerHTML = '';
+
+            // Opción Limpiar
+            const clearBtn = document.createElement('div');
+            clearBtn.className = 'option-item opt-clear';
+            clearBtn.innerHTML = '<i class="fa-solid fa-eraser"></i> Limpiar';
+            clearBtn.onclick = () => selectOption(null, null);
+            list.appendChild(clearBtn);
+
+            // Opciones Reales
+            if (OPTIONS[type]) {
+                title.innerText = "Opciones para " + type.toUpperCase();
+                OPTIONS[type].forEach(opt => {
+                    const item = document.createElement('div');
+                    item.className = `option-item ${opt.class}`;
+                    item.innerText = opt.label;
+                    item.onclick = () => selectOption(opt.label, opt.class);
+                    list.appendChild(item);
+                });
+            }
+
+            // Posicionar Menú
+            const rect = cell.getBoundingClientRect();
+            // Ajuste básico para que no se salga
+            let top = rect.bottom + 5;
+            let left = rect.left;
+
+            if (top + 200 > window.innerHeight) top = rect.top - 200; // Subir si no cabe abajo
+
+            menu.style.display = 'block';
+            menu.style.top = top + 'px';
+            menu.style.left = left + 'px';
+        }
+
+        function hideMenu() {
+            document.getElementById('options-menu').style.display = 'none';
+            activeCell = null;
+        }
+
+        function selectOption(label, cssClass) {
+            if (activeCell) {
+                if (label) {
+                    activeCell.className = `cell ${cssClass}`;
+                    activeCell.innerText = label;
+                } else {
+                    activeCell.className = 'cell';
+                    activeCell.innerText = '';
+                }
+            }
+            hideMenu();
+        }
+
+        function resetAll() {
+            if (confirm("¿Borrar todo el plan?")) {
+                document.querySelectorAll('.cell').forEach(c => {
+                    c.className = 'cell';
+                    c.innerText = '';
+                });
+            }
         }
     </script>
 </body>
