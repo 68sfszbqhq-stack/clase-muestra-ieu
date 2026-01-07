@@ -34,8 +34,8 @@ class SportsAI {
         `;
 
         try {
-            // Usamos gemini-1.5-flash que es más estable con rate limits
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${USER_API_KEY}`, {
+            // Usamos 'gemini-pro' (1.0), el estándar más compatible y seguro actualmente
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${USER_API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
