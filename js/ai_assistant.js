@@ -78,9 +78,8 @@ class SportsAI {
         `;
 
         const MODELS_TO_TRY = [
-            'gemini-1.5-flash',      // ESTÁNDAR ORO (Rápido y Estable)
-            'gemini-2.0-flash-exp',  // Nueva Generación (Si tienes acceso)
-            'gemini-1.5-pro'         // Mayor razonamiento
+            'gemini-1.5-pro-latest', // El único que suele funcionar en cuentas "fresh"
+            'gemini-2.0-flash-exp'   // Tu única alternativa confirmada (Cuidado con cuota)
         ];
 
         let lastError = null;
@@ -124,8 +123,8 @@ class SportsAI {
             } catch (error) {
                 console.warn(`❌ Falló modelo ${model}:`, error.message);
                 lastError = error;
-                // Esperar 1.5s antes de reintentar para no saturar
-                await new Promise(r => setTimeout(r, 1500));
+                // Esperar 2.5s antes de reintentar para enfriar la API
+                await new Promise(r => setTimeout(r, 2500));
             }
         }
 
