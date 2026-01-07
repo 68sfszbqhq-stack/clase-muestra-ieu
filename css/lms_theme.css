@@ -615,3 +615,85 @@
     font-family: inherit;
     resize: none;
 }
+
+/* --- CHAT REAL STYLES --- */
+.chat-feed {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.chat-input-area {
+    width: 100%;
+    padding: 15px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.chat-input-area button {
+    background: var(--lms-primary);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.chat-input-area button:hover { transform: scale(1.1); }
+
+/* Globos de Mensaje */
+.chat-msg {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    position: relative;
+    line-height: 1.4;
+}
+
+.chat-msg.mine {
+    background: var(--lms-secondary);
+    color: white;
+    align-self: flex-end;
+    border-radius: 12px 12px 0 12px;
+}
+
+.chat-msg.others {
+    background: #eee;
+    color: #333;
+    border-radius: 12px 12px 12px 0;
+}
+
+.chat-msg .author {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #555;
+}
+.chat-msg.mine .author { display: none; } /* No mostrar mi propio nombre */
+
+.chat-msg.system {
+    align-self: center;
+    background: transparent;
+    color: #999;
+    text-align: center;
+    font-style: italic;
+}

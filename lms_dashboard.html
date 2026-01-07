@@ -159,10 +159,19 @@
                     </ul>
                 </div>
                 <div class="forum-chat-area">
-                    <div class="chat-placeholder">
-                        <i class="fa-solid fa-comments fa-3x" style="color:#ddd; margin-bottom:15px;"></i>
-                        <h3>Selecciona un tema</h3>
-                        <p>Participa en la discusión y gana puntos de reputación.</p>
+                    <!-- Área de Mensajes Dinámica -->
+                    <div id="chat-feed" class="chat-feed">
+                        <!-- Los mensajes se cargarán aquí vía JS -->
+                        <div class="chat-msg system">
+                            <small>Bienvenido al canal <strong>#General</strong>. Sé respetuoso.</small>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="chat-input-area">
+                        <input type="text" id="msg-input" placeholder="Escribe tu aporte..."
+                            onkeypress="handleEnter(event)">
+                        <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -204,6 +213,7 @@
 
     <script src="js/firebase-config.js"></script>
     <script src="js/lms_core.js"></script>
+    <script src="js/lms_forum.js"></script>
     <script>
         // UI Logic
         function switchTab(tabId) {
