@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Alto Rendimiento</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/lms_theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+
+<body class="lms-body">
+
+    <!-- SIDEBAR -->
+    <nav class="lms-sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-dumbbell fa-2x" style="color:var(--lms-primary)"></i>
+            <span style="font-weight:bold; font-size:1.2rem; color:white;">IEU Sport</span>
+        </div>
+
+        <ul class="nav-links">
+            <li class="active" onclick="switchTab('home')"><i class="fa-solid fa-map"></i> Mapa del Curso</li>
+            <li onclick="switchTab('community')"><i class="fa-solid fa-users"></i> Comunidad</li>
+            <li onclick="switchTab('lab')"><i class="fa-solid fa-flask"></i> Laboratorio</li>
+            <li onclick="switchTab('profile')"><i class="fa-solid fa-id-card"></i> Mi Ficha Técnica</li>
+        </ul>
+
+        <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-sign-out"></i> Cerrar Sesión</button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="lms-main">
+
+        <!-- TOP BAR -->
+        <header class="lms-header">
+            <div>
+                <h2 id="user-greeting">Hola, Entrenador 👋</h2>
+                <p style="color:#777; font-size:0.9rem;">Continúa tu preparación hacia el oro.</p>
+            </div>
+
+            <div class="xp-container">
+                <div style="font-size:0.8rem; font-weight:bold; margin-bottom:5px;">NIVEL <span id="user-level">1</span>
+                </div>
+                <div class="xp-bar-bg">
+                    <div id="user-xp-bar" class="xp-bar-fill" style="width: 0%"></div>
+                </div>
+                <div style="font-size:0.7rem; text-align:right; margin-top:2px;"><span id="user-xp">0</span> XP</div>
+            </div>
+        </header>
+
+        <!-- DYNAMIC VIEWS -->
+        <div id="view-home" class="view-section active">
+            <!-- MÓDULOS DE APRENDIZAJE -->
+            <h3 class="section-title">Tu Ruta de Aprendizaje</h3>
+
+            <div class="modules-grid-lms">
+
+                <!-- UNIDAD 1: PERIODIZACIÓN (Disponible) -->
+                <div class="lms-module-card unlock" onclick="openModule('periodizacion')">
+                    <div class="module-status"><i class="fa-solid fa-check-circle"></i> En Progreso</div>
+                    <div class="module-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>Unidad 1: Modelos de Periodización</h3>
+                    <p>Matveev, Pendular, Bloques y ATR. Construye los cimientos.</p>
+                    <div class="progress-mini">
+                        <div class="bar" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <!-- UNIDAD 2: FISIOLOGÍA (Bloqueado) -->
+                <div class="lms-module-card lock">
+                    <div class="module-status"><i class="fa-solid fa-lock"></i> Bloqueado</div>
+                    <div class="module-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <h3>Unidad 2: Fisiología de Carga</h3>
+                    <p>Umbrales, Lactato y Adaptación. El motor del atleta.</p>
+                </div>
+
+                <!-- UNIDAD 3: FUERZA (Bloqueado) -->
+                <div class="lms-module-card lock">
+                    <div class="module-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+                    <h3>Unidad 3: Desarrollo de Fuerza</h3>
+                    <p>Hipertrofia, Potencia y Fuerza Máxima.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA DE MÓDULO (Oculta por defecto) -->
+        <div id="view-module" class="view-section">
+            <button class="btn-back" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Volver al
+                Mapa</button>
+
+            <div class="module-header-banner">
+                <h1 id="mod-title">Unidad 1: Periodización</h1>
+                <div class="mod-tabs">
+                    <button class="tab-btn active" onclick="modTab('content')"><i class="fa-solid fa-book-open"></i>
+                        Contenido</button>
+                    <button class="tab-btn" onclick="modTab('challenge')"><i class="fa-solid fa-puzzle-piece"></i>
+                        Desafío</button>
+                    <button class="tab-btn" onclick="modTab('forum')"><i class="fa-solid fa-comments"></i>
+                        Debate</button>
+                    <button class="tab-btn" onclick="modTab('exam')"><i class="fa-solid fa-trophy"></i>
+                        Evaluación</button>
+                </div>
+            </div>
+
+            <!-- CONTENIDO DE TABS -->
+            <div id="tab-content" class="mod-tab-content active">
+                <div class="content-wrapper">
+                    <div class="video-placeholder">
+                        <i class="fa-solid fa-play-circle fa-3x"></i>
+                        <p>Video Introductorio: ¿Por qué fallan los planes?</p>
+                    </div>
+
+                    <div class="reading-material">
+                        <h4>Lecturas Fundamentales</h4>
+                        <ul>
+                            <li><i class="fa-solid fa-file-pdf"></i> <a href="#" target="_blank">Matveev vs
+                                    Verkhoshansky (PDF)</a></li>
+                            <li><i class="fa-solid fa-link"></i> <a href="#" target="_blank">Caso Estudio: Michael
+                                    Phelps 2008</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- AQUÍ INTEGRAMOS TU PRESENTACIÓN DE SLIDES -->
+                    <div class="slides-integration-box">
+                        <h4><i class="fa-solid fa-presentation-screen"></i> Clase Interactiva</h4>
+                        <p>Explora los conceptos clave de forma visual.</p>
+                        <a href="presentation/slides.html" target="_blank" class="btn-launch">Abrir Presentación</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-challenge" class="mod-tab-content">
+                <h3>El Caso del Maratonista Frustrado</h3>
+                <p>Analiza el siguiente caso paradójico y propón una solución en el foro.</p>
+                <!-- Aquí irá el interactivo de "Encuentra el error" -->
+            </div>
+
+            <div id="tab-exam" class="mod-tab-content">
+                <div class="exam-card-center">
+                    <h3>Quiz de Certificación: Unidad 1</h3>
+                    <p>Demuestra que dominas los modelos.</p>
+                    <a href="presentation/exam.html" target="_blank" class="btn-launch-exam">Iniciar Examen</a>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/lms_core.js"></script>
+    <script>
+        // Inline script para manejo rápido de UI (Luego moveremos a JS)
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + (tabId === 'home' ? 'home' : 'module')).classList.add('active'); // Simplificado por ahora
+
+            // Highlight nav
+            document.querySelectorAll('.nav-links li').forEach(el => el.classList.remove('active'));
+        }
+
+        function openModule(modId) {
+            document.getElementById('view-home').classList.remove('active');
+            document.getElementById('view-module').classList.add('active');
+            // Aquí cargaríamos contenido dinámico según modId
+        }
+
+        function modTab(tabName) {
+            document.querySelectorAll('.mod-tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Init Check
+        window.onload = function () {
+            // Verificar sesión real
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    document.getElementById('user-greeting').textContent = "Hola, " + (user.displayName || "Entrenador");
+                    // Load XP from DB...
+                } else {
+                    // Check local guest
+                    let guest = JSON.parse(localStorage.getItem('lms_guest_user'));
+                    if (guest) {
+                        document.getElementById('user-greeting').textContent = "Hola, " + guest.displayName;
+                    } else {
+                        window.location.href = 'lms_index.html';
+                    }
+                }
+            });
+        };
+
+        function logout() {
+            firebase.auth().signOut();
+            localStorage.removeItem('lms_guest_user');
+            window.location.href = 'lms_index.html';
+        }
+    </script>
+</body>
+
+</html>
