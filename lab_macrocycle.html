@@ -44,20 +44,23 @@
         }
 
         .lab-workspace {
-            display: flex;
-            flex: 1;
+            display: grid;
+            /* Grid es más robusto que Flex aquí */
+            grid-template-columns: 280px 1fr;
+            /* Panel fijo | Timeline flexible */
             gap: 20px;
+            flex: 1;
             overflow: hidden;
-            /* Contener desbordes */
             min-height: 0;
-            /* Fix flexbox vertical scroll */
+            width: 100%;
+            /* Asegurar uso total */
         }
 
         /* --- PALETA DE HERRAMIENTAS (Izquierda) --- */
         .tools-panel {
-            width: 250px;
-            min-width: 250px;
-            /* EVITAR COLAPSO */
+            width: 100%;
+            /* Llenar celda grid */
+            min-width: 0;
             background: white;
             border-radius: 15px;
             padding: 20px;
@@ -236,7 +239,8 @@
             <div>
                 <h2 style="margin:0;"><i class="fa-solid fa-flask"></i> Laboratorio de Macrociclos</h2>
                 <p style="margin:0; color:#777; font-size:0.9rem;">Construye un plan anual coherente para
-                    <strong>Natación (Modelo Clásico)</strong>.</p>
+                    <strong>Natación (Modelo Clásico)</strong>.
+                </p>
             </div>
             <div style="display:flex; gap:10px;">
                 <button class="btn-secondary" onclick="resetLab()">🗑️ Borrar</button>
