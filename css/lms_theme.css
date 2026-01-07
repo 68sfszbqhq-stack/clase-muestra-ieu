@@ -473,3 +473,145 @@
 
     /* Mobile sidebar hidden logic needed later */
 }
+/* --- COMUNIDAD & PERFIL STYLES --- */
+
+/* Forum Layout */
+.forum-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    height: 70vh;
+}
+
+.forum-sidebar {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.topic-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    overflow-y: auto;
+}
+
+.topic-list li {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.topic-list li:hover, .topic-list li.active { background: #f9f9f9; }
+
+.topic-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.tag-general { background: #E3F2FD; color: #1565C0; }
+.tag-debate { background: #FFEBEE; color: #C62828; }
+
+.forum-chat-area {
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    color: #888;
+}
+
+.btn-new-topic {
+    width: 100%;
+    padding: 10px;
+    background: var(--lms-secondary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Profile Layout */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+.profile-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.profile-card.info {
+    grid-row: span 2;
+    text-align: center;
+}
+
+.profile-avatar-lg {
+    width: 100px;
+    height: 100px;
+    background: var(--lms-primary);
+    color: white;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+}
+
+.role-badge {
+    background: #E0F7FA;
+    color: #006064;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.medals-grid {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.medal {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    position: relative;
+    cursor: help;
+}
+.medal.unlocked { background: #FFF8E1; color: #FFC107; border: 2px solid #FFC107; }
+.medal.locked { background: #f0f0f0; color: #ccc; border: 2px dashed #ccc; }
+
+.journal-input {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: inherit;
+    resize: none;
+}
