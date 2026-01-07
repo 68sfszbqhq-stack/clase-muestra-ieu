@@ -202,9 +202,14 @@
                 <div class="profile-card journal">
                     <h3>📒 Diario de Aprendizaje</h3>
                     <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Reflexiona: ¿Qué aprendiste hoy?</p>
-                    <textarea class="journal-input"
+                    <textarea id="journal-input" class="journal-input"
                         placeholder="Hoy descubrí que la periodización inversa es útil para..."></textarea>
-                    <button class="btn-primary-lms" style="margin-top:10px; padding:8px 15px;">Guardar Entrada</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                        <button class="btn-primary-lms" style="padding:8px 15px;" onclick="saveJournalEntry()">Guardar
+                            Entrada</button>
+                        <span id="journal-feedback" style="font-size:0.8rem; color:#4CAF50; display:none;"><i
+                                class="fa-solid fa-check"></i> Guardado (+10 XP)</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,6 +219,7 @@
     <script src="js/firebase-config.js"></script>
     <script src="js/lms_core.js"></script>
     <script src="js/lms_forum.js"></script>
+    <script src="js/lms_journal.js"></script>
     <script>
         // UI Logic
         function switchTab(tabId) {
