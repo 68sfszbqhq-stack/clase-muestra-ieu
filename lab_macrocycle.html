@@ -312,14 +312,161 @@
         </table>
     </div>
 
-    <!-- MENÚ -->
-    <div id="options-menu">
-        <div class="menu-title" id="menu-title">Opción</div>
-        <div id="menu-options"></div>
+    <!-- WIZARD DE CONFIGURACIÓN (ANAMNESIS) -->
+    <div id="wizard-overlay">
+        <div class="wizard-card">
+            <div class="wizard-header">
+                <h3><i class="fa-solid fa-clipboard-question"></i> Configuración del Macrociclo</h3>
+                <div class="step-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+
+            <form id="wizard-form">
+                <!-- PASO 1: EL DEPORTISTA -->
+                <div class="wizard-step active" id="step-1">
+                    <h4>1. Análisis y Clasificación</h4>
+                    <div class="form-group">
+                        <label>Deporte</label>
+                        <input type="text" id="wiz-sport" placeholder="Ej: Natación 100m, Fútbol, Judo...">
+                    </div>
+                    <div class="form-group">
+                        <label>Nivel del Atleta</label>
+                        <select id="wiz-level">
+                            <option value="formativo">Formativo / Novato</option>
+                            <option value="desarrollo">Desarrollo / Amateur</option>
+                            <option value="elite">Alto Rendimiento / Elite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Deporte (Fundamento Clave)</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="wiz-type" value="ciclico"> Cíclico (Continuo,
+                                unidireccional)</label>
+                            <label><input type="radio" name="wiz-type" value="aciclico"> Acíclico (Intermitente, equipo,
+                                combate)</label>
+                        </div>
+                    </div>
+                    <div class="wiz-nav">
+                        <button type="button" class="btn-wiz" onclick="nextStep(2)">Siguiente <i
+                                class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- PASO 2: FISIOLOGÍA -->
+                <div class="wizard-step" id="step-2">
+                    <h4>2. Fisiología Predominante</h4>
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">¿Qué "motor" usaremos principalmente?
+                    </p>
+                    <div class="form-group">
+                        <label>Sistema Energético Principal</label>
+                        <select id="wiz-energy">
+                            <option value="atp-pc">Anaeróbico Aláctico (Potencia pura 0-10s)</option>
+                            <option value="glucolitico">Anaeróbico Láctico (Resistencia a la velocidad 10s-2min)
+                            </option>
+                            <option value="oxidativo">Aeróbico (Resistencia larga >2min)</option>
+                            <option value="mixto">Mixto Intermitente (Deportes de equipo)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacidad Física Prioritaria</label>
+                        <select id="wiz-priority">
+                            <option value="fuerza">Fuerza (Explosiva, Máxima)</option>
+                            <option value="velocidad">Velocidad (Desplazamiento, Reacción)</option>
+                            <option value="resistencia">Resistencia</option>
+                            <option value="tecnica">Técnica/Táctica</option>
+                        </select>
+                    </div>
+                    <div class="wiz-nav">
+                        <button type="button" class="btn-wiz sec" onclick="nextStep(1)">Atrás</button>
+                        <button type="button" class="btn-wiz" onclick="nextStep(3)">Siguiente <i
+                                class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- PASO 3: OBJETIVOS -->
+                <div class="wizard-step" id="step-3">
+                    <h4>3. Calendario Competitivo</h4>
+                    <div class="form-group">
+                        <label>Número de Macrociclos (Picos de forma)</label>
+                        <select id="wiz-peaks">
+                            <option value="1">1 Cima (Tradicional / Mono-cíclico)</option>
+                            <option value="2">2 Cimas (Bi-cíclico)</option>
+                            <option value="3">3 Cimas (Tri-cíclico / ATR)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Objetivo Principal de la Temporada</label>
+                        <input type="text" id="wiz-goal" placeholder="Ej: Ganar el Nacional, Bajar marca a 10.5s...">
+                    </div>
+                    <div class="wiz-nav">
+                        <button type="button" class="btn-wiz sec" onclick="nextStep(2)">Atrás</button>
+                        <button type="button" class="btn-wiz finish" onclick="finishWizard()">¡Comenzar Planificación!
+                            🚀</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
+        // CONFIGURACIÓN GLOBAL
+        let PROJECT_CONFIG = {};
+
+        // WIZARD LOGIC
+        function nextStep(step) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step-' + step).classList.add('active');
+
+            document.querySelectorAll('.dot').forEach((el, index) => {
+                el.classList.toggle('active', index + 1 <= step);
+            });
+        }
+
+        function finishWizard() {
+            // Capturar datos
+            PROJECT_CONFIG = {
+                sport: document.getElementById('wiz-sport').value,
+                level: document.getElementById('wiz-level').value,
+                type: document.querySelector('input[name="wiz-type"]:checked')?.value || 'N/A',
+                energy: document.getElementById('wiz-energy').value,
+                priority: document.getElementById('wiz-priority').value,
+                grid_type: document.getElementById('wiz-peaks').value
+            };
+
+            if (!PROJECT_CONFIG.sport) {
+                alert("Por favor define al menos el Deporte.");
+                return;
+            }
+
+            // Ocultar Wizard
+            document.getElementById('wizard-overlay').style.display = 'none';
+
+            // Actualizar Interfaz (Feedback contextual)
+            updateUIcontext();
+        }
+
+        function updateUIcontext() {
+            // Cambiar título
+            const toolbarTitle = document.querySelector('.toolbar div:first-child');
+            toolbarTitle.innerHTML = `<i class="fa-solid fa-clipboard-check"></i> Plan: ${PROJECT_CONFIG.sport} (${PROJECT_CONFIG.level})`;
+
+            // Resaltar filas sugeridas
+            // Ej: Si eligió Fuerza, resaltar la fila fuerza
+            const rowMap = { 'fuerza': 'strength', 'resistencia': 'resistance', 'velocidad': 'speed' };
+            const priorityRow = rowMap[PROJECT_CONFIG.priority];
+
+            if (priorityRow) {
+                // Aquí podríamos añadir lógica visual, por ahora solo console
+                console.log("Fila prioritaria:", priorityRow);
+            }
+        }
+
+        /* --- LÓGICA ANTERIOR (MATRIZ) --- */
         const WEEKS = 52;
+        /* ... (Resto del código existente) ... */
 
         // ESTRUCTURA COMPLETA BASADA EN TU IMAGEN
         const ROWS = [

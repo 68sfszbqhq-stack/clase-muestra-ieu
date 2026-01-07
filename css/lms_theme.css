@@ -697,3 +697,98 @@
     text-align: center;
     font-style: italic;
 }
+
+/* --- WIZARD STYLES --- */
+#wizard-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); /* Fondo oscuro constructivista */
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wizard-card {
+    background: white;
+    width: 500px;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.wizard-header {
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.step-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+.dot {
+    width: 10px; height: 10px;
+    background: #ddd;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+.dot.active { background: var(--lms-primary); transform: scale(1.2); }
+
+.wizard-step { display: none; }
+.wizard-step.active { display: block; animation: fadeIn 0.3s; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; }
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.form-group input:focus { border-color: var(--lms-primary); outline: none; }
+
+.radio-group label {
+    display: block;
+    padding: 8px;
+    background: #f9f9f9;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.radio-group input { width: auto; margin-right: 10px; }
+
+.wiz-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn-wiz {
+    background: var(--lms-primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.btn-wiz.sec { background: #bbb; }
+.btn-wiz.finish { background: #27ae60; }
+.btn-wiz:hover { opacity: 0.9; }
