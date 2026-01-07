@@ -34,7 +34,8 @@ class SportsAI {
         `;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${USER_API_KEY}`, {
+            // Usamos gemini-1.5-flash que es más estable con rate limits
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${USER_API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -48,7 +49,11 @@ class SportsAI {
 
             if (data.error) {
                 console.error("AI Error:", data.error);
-                alert("Error de IA: " + data.error.message);
+                if (data.error.code === 429) {
+                    alert("⏳ La IA está saturada (Límite de Cuota). Espera 30seg y reintenta.");
+                } else {
+                    alert("Error de IA: " + data.error.message);
+                }
                 return null;
             }
 
