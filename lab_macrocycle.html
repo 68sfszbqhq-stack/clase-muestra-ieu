@@ -445,30 +445,41 @@
             const feedbackText = document.getElementById('ai-text');
 
             feedbackBox.style.display = 'block';
-            feedbackText.innerText = "Consultando a Gemini AI...";
+            feedbackText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando Informe Metodológico con IA (esto puede tardar unos segundos)...';
 
             const analysis = await SportsAI.analyzeSport(sport);
 
-            if (analysis) {
-                // Llenar campos automáticamente
-                // 1. Tipo
-                const radio = document.querySelector(`input[name="wiz-type"][value="${analysis.type}"]`);
+            if (analysis && analysis.technical_data) {
+                const tech = analysis.technical_data;
+
+                // Llenar campos automáticos
+                const radio = document.querySelector(`input[name="wiz-type"][value="${tech.type}"]`);
                 if (radio) radio.checked = true;
 
-                // 2. Energía
-                document.getElementById('wiz-energy').value = analysis.energy;
+                document.getElementById('wiz-energy').value = tech.energy;
+                document.getElementById('wiz-priority').value = tech.priority;
+                document.getElementById('wiz-peaks').value = tech.grid_type || "1";
 
-                // 3. Prioridad
-                document.getElementById('wiz-priority').value = analysis.priority;
+                // Renderizar Reporte Completo
+                let formattedReport = analysis.full_report
+                    .replace(/\n\n/g, '<br><br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/### (.*?)\n/g, '<h5 style="margin:10px 0 5px; color:#4A148C;">$1</h5>')
+                    .replace(/1\. /g, '<br>• ');
 
-                // 4. Explicación
-                feedbackText.innerHTML = `<strong>${analysis.explanation}</strong>`;
+                feedbackText.innerHTML = `
+                    <div style="border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:10px; font-weight:bold; color:#8e44ad;">
+                        <i class="fa-solid fa-check-circle"></i> Análisis Completado
+                    </div>
+                    <div style="max-height: 250px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5; color:#333;">
+                        ${formattedReport}
+                    </div>
+                `;
 
-                // Efecto visual
-                feedbackBox.style.background = "#E8F5E9"; // Verde éxito
-                feedbackBox.style.color = "#1B5E20";
+                feedbackBox.style.background = "#fff";
+                feedbackBox.style.border = "2px solid #8e44ad";
             } else {
-                feedbackBox.style.display = 'none';
+                feedbackText.innerText = "Error: No se pudo generar el reporte.";
             }
         }
 

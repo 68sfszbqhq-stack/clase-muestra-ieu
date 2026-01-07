@@ -17,20 +17,36 @@ class SportsAI {
         }
 
         const aiPrompt = `
-            Actúa como un Experto Fisiólogo Deportivo y Pedagogo. Analiza el deporte: "${sportName}".
-            Basado en los fundamentos del entrenamiento:
-            1. Clasifícalo: "ciclico" o "aciclico".
-            2. Sistema Energético Predominante: "atp-pc", "glucolitico", "oxidativo" o "mixto".
-            3. Capacidad Prioritaria: "fuerza", "velocidad", "resistencia" o "tecnica".
-            4. Explica POR QUÉ brevemente (máximo 40 palabras) con enfoque constructivista.
+            Actúa como un Experto Metodólogo Deportivo de Alto Rendimiento.
+            Vas a planificar el macrociclo para el deporte: "${sportName}".
+            Genera un REPORTE TÉCNICO COMPLETO basado rigurosamente en estos 8 FUNDAMENTOS:
 
-            Responde ÚNICAMENTE en formato JSON plano así:
+            1. Análisis Inicial: Perfil fisiológico y antropométrico ideal.
+            2. Clasificación: Cíclico o Acíclico (y por qué).
+            3. Sistemas Energéticos: Identificar el predominante (ATP-PC, Glucolítico, Oxidativo) y los secundarios.
+            4. Capacidades Físicas: Ordenar por prioridad (Fuerza, Velocidad, Resistencia, Flexibilidad).
+            5. Objetivos y Calendario: Propuesta de picos de forma (1, 2 o 3 cimas).
+            6. Periodización: Sugerencia de modelo (Tradicional, ATR, Bloques) y fases críticas.
+            7. Distribución de Cargas: Principios de volumen vs intensidad para este deporte.
+            8. Selección de Medios: Ejemplos de ejercicios específicos (Generales vs Específicos).
+
+            Responde ÚNICAMENTE en este formato JSON válido:
             {
-                "type": "...",
-                "energy": "...",
-                "priority": "...",
-                "explanation": "..."
+                "technical_data": {
+                    "type": "...", 
+                    "energy": "...",
+                    "priority": "...",
+                    "grid_type": "..." 
+                },
+                "summary": "Resumen de 1 linea del enfoque pedagógico.",
+                "full_report": "Aquí escribe el reporte detallado de los 8 puntos usando formato Markdown (usa saltos de línea \\n). Sé profesional, académico y directo."
             }
+            
+            Nota: 
+            - "type" debe ser "ciclico" o "aciclico".
+            - "energy" debe ser "atp-pc", "glucolitico", "oxidativo" o "mixto".
+            - "priority" debe ser "fuerza", "velocidad", "resistencia" o "tecnica".
+            - "grid_type" debe ser "1", "2" o "3" (picos).
         `;
 
         const MODELS_TO_TRY = [
@@ -66,7 +82,7 @@ class SportsAI {
                 let rawText = data.candidates[0].content.parts[0].text;
                 rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
 
-                return JSON.parse(rawText); // ¡ÉXITO! Retornamos y salimos del bucle.
+                return JSON.parse(rawText);
 
             } catch (error) {
                 console.warn(`❌ Falló modelo ${model}:`, error.message);
@@ -81,53 +97,28 @@ class SportsAI {
     }
 
     static localAnalysis(sport) {
-        // Base de conocimiento básica para fallback
+        // Fallback enriquecido
         const term = sport.toLowerCase();
-        let result = {
-            type: "aciclico",
-            energy: "mixto",
-            priority: "resistencia",
-            explanation: "Análisis basado en heurística local (IA desconectada). Se sugiere revisar la clasificación según la intermitencia del esfuerzo."
+        let tech = { type: "aciclico", energy: "mixto", priority: "tecnica", grid_type: "2" };
+        let report = "## Informe de Respaldo (IA Desconectada)\n\nNo se pudo generar el reporte detallado. Se aplican valores por defecto basados en heurística local.";
+
+        if (term.includes("natacion") || term.includes("correr") || term.includes("maraton")) {
+            tech = { type: "ciclico", energy: "oxidativo", priority: "resistencia", grid_type: "1" };
+            report = `## Informe Técnico: ${sport} (Modo Local)\n\n1. **Clasificación**: Deporte Cíclico de tiempo y marca.\n2. **Sistema**: Predominio Oxidativo / Aeróbico.\n3. **Capacidades**: Resistencia Aeróbica como base, Potencia Aeróbica como determinante.`;
+        }
+
+        if (term.includes("futbol") || term.includes("basket")) {
+            tech = { type: "aciclico", energy: "mixto", priority: "tecnica", grid_type: "2" };
+            report = `## Informe Técnico: ${sport} (Modo Local)\n\n1. **Clasificación**: Deporte Acíclico de invasión/equipo.\n2. **Sistema**: Mixto (Intermitente de Alta Intensidad).\n3. **Capacidades**: Resistencia a la repetición de sprints (RSA).`;
+        }
+
+        alert("⚠️ Google AI sigue saturada o Key inválida. Mostrando datos locales básicos.");
+
+        return {
+            technical_data: tech,
+            summary: "Análisis local activado por falta de conexión IA.",
+            full_report: report
         };
-
-        // Reglas Heurísticas
-        if (term.includes("natacion") || term.includes("correr") || term.includes("ciclismo") || term.includes("remo") || term.includes("atletismo")) {
-            result.type = "ciclico";
-            result.energy = "oxidativo";
-            result.priority = "resistencia";
-            result.explanation = "Deporte de carácter continuo y cíclico. La base aeróbica es fundamental para mantener el esfuerzo prolongado.";
-        }
-
-        if (term.includes("futbol") || term.includes("basquet") || term.includes("rugby") || term.includes("hockey")) {
-            result.type = "aciclico";
-            result.energy = "mixto";
-            result.priority = "tecnica";
-            result.explanation = "Deporte de situación (acíclico) con demandas intermitentes. Requiere eficiencia técnica bajo fatiga mixta.";
-        }
-
-        if (term.includes("box") || term.includes("judo") || term.includes("karate") || term.includes("mma") || term.includes("lucha")) {
-            result.type = "aciclico";
-            result.energy = "glucolitico";
-            result.priority = "resistencia"; // a la fuerza
-            result.explanation = "Combate de alta intensidad intermitente. Predominio de la vía glucolítica por la duración de los asaltos y explosividad.";
-        }
-
-        if (term.includes("pesas") || term.includes("crossfit") || term.includes("power") || term.includes("gym")) {
-            result.type = "aciclico";
-            result.energy = "atp-pc";
-            result.priority = "fuerza";
-            result.explanation = "Esfuerzos de máxima intensidad y corta duración. La vía de fosfágenos es la clave para la producción de fuerza pico.";
-        }
-
-        if (term.includes("100m") || term.includes("velocidad")) {
-            result.type = "ciclico";
-            result.energy = "atp-pc";
-            result.priority = "velocidad";
-            result.explanation = "Evento de velocidad pura. Dependencia total de la potencia anaeróbica aláctica.";
-        }
-
-        alert("⚠️ Aviso: Google AI está saturada. Usando análisis local de respaldo.");
-        return result;
     }
 
     static resetKey() {
