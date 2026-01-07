@@ -16,7 +16,7 @@ class SportsAI {
             }
         }
 
-        const prompt = `
+        const aiPrompt = `
             Actúa como un Experto Fisiólogo Deportivo y Pedagogo. Analiza el deporte: "${sportName}".
             Basado en los fundamentos del entrenamiento:
             1. Clasifícalo: "ciclico" o "aciclico".
@@ -39,7 +39,7 @@ class SportsAI {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     contents: [{
-                        parts: [{ text: prompt }]
+                        parts: [{ text: aiPrompt }]
                     }]
                 })
             });
