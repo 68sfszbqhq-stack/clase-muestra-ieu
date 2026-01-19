@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Cuatro Acuerdos: El Reto Interactivo</title>
+    <style>
+        :root {
+            --color-primary: #4A90E2;
+            --color-secondary: #E3F2FD;
+            --color-text: #333;
+            --color-correct: #4CAF50;
+            --color-incorrect: #F44336;
+            --color-bg-dark: #2c3e50;
+            --color-bg-light: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--color-bg-light);
+            color: var(--color-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--color-primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #progress {
+            font-size: 1em;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        #scenario-text {
+            background-color: var(--color-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            line-height: 1.6;
+            text-align: left;
+            border-left: 5px solid var(--color-primary);
+        }
+
+        .buttons-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: var(--color-primary);
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button.selected {
+            background-color: var(--color-bg-dark);
+        }
+
+        button.correct {
+            background-color: var(--color-correct);
+        }
+
+        button.incorrect {
+            background-color: var(--color-incorrect);
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 25px;
+        }
+
+        #score-counter {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        #next-btn {
+            background-color: var(--color-bg-dark);
+            color: white;
+            padding: 15px 40px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            display: none;
+        }
+
+        #results-container {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--color-primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            background-color: #357abd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            button {
+                font-size: 0.9em;
+                padding: 12px 20px;
+            }
+
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="../index.html" class="back-button">
+        ← Volver al inicio
+    </a>
+
+    <div class="container">
+        <h1>Los Cuatro Acuerdos: El Reto</h1>
+        <p>Identifica de qué acuerdo se trata cada situación. ¡Por cada respuesta correcta, ganarás un punto!</p>
+
+        <div id="quiz-container">
+            <div id="progress">Pregunta 1 de 20</div>
+            <div id="score-counter">Correctas: 0 de 20</div>
+            <div id="scenario-text"></div>
+
+            <div class="buttons-group">
+                <button data-acuerdo="Sé impecable con tus palabras">Impecable con tus palabras</button>
+                <button data-acuerdo="No te tomes nada personalmente">No te tomes nada personalmente</button>
+                <button data-acuerdo="No hagas suposiciones">No hagas suposiciones</button>
+                <button data-acuerdo="Haz siempre lo mejor que puedas">Haz siempre lo mejor que puedas</button>
+            </div>
+
+            <div id="feedback"></div>
+
+            <button id="next-btn">Siguiente Escenario</button>
+        </div>
+
+        <div id="results-container" class="hidden">
+            <h2>¡Reto Completado!</h2>
+            <p id="final-score"></p>
+            <p id="summary-text"></p>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+            { id: 1, agreement: "Sé impecable con tus palabras", situation: "Hablar con amigos sobre alguien que no está presente.", scenarioText: "Te unes a un chisme, inventando o exagerando detalles sobre lo que escuchaste.", applied: false },
+            { id: 2, agreement: "Sé impecable con tus palabras", situation: "Hablar con amigos sobre alguien que no está presente.", scenarioText: "Dices: 'No me gusta hablar de las personas a sus espaldas, prefiero que hablemos de otra cosa'.", applied: true },
+            { id: 3, agreement: "Sé impecable con tus palabras", situation: "Comentar en una foto de redes sociales.", scenarioText: "Escribes un comentario sarcástico o negativo, como 'No me gusta cómo te queda esa ropa'.", applied: false },
+            { id: 4, agreement: "Sé impecable con tus palabras", situation: "Comentar en una foto de redes sociales.", scenarioText: "Escribes un comentario de apoyo, como '¡Qué bien te ves! ¡Me encanta la foto!'.", applied: true },
+            { id: 5, agreement: "Sé impecable con tus palabras", situation: "Hablar de tu propio desempeño académico.", scenarioText: "Te dices a ti mismo: 'Soy un tonto, nunca entenderé las matemáticas'.", applied: false },
+            { id: 6, agreement: "Sé impecable con tus palabras", situation: "Hablar de tu propio desempeño académico.", scenarioText: "Te dices a ti mismo: 'Este tema es difícil, pero voy a pedir ayuda para entenderlo mejor'.", applied: true },
+            { id: 7, agreement: "Sé impecable con tus palabras", situation: "Un amigo te pide un favor que no puedes hacer.", scenarioText: "Le prometes que lo ayudarás, aunque sabes que no podrás, para evitar la confrontación.", applied: false },
+            { id: 8, agreement: "Sé impecable con tus palabras", situation: "Un amigo te pide un favor que no puedes hacer.", scenarioText: "Eres honesto y le dices: 'Me gustaría ayudarte, pero no puedo en este momento. Lamento no poder hacerlo'.", applied: true },
+            { id: 9, agreement: "Sé impecable con tus palabras", situation: "Querer que tus padres te den permiso para ir a una fiesta.", scenarioText: "Les mientes sobre quiénes van a ir o sobre a qué hora regresarás.", applied: false },
+            { id: 10, agreement: "Sé impecable con tus palabras", situation: "Querer que tus padres te den permiso para ir a una fiesta.", scenarioText: "Les dices la verdad sobre la fiesta y les explicas por qué es importante para ti ir, creando confianza.", applied: true },
+            { id: 11, agreement: "Sé impecable con tus palabras", situation: "Responder a un comentario enojado de un amigo.", scenarioText: "Respondes con insultos o un lenguaje agresivo en el chat de grupo.", applied: false },
+            { id: 12, agreement: "Sé impecable con tus palabras", situation: "Responder a un comentario enojado de un amigo.", scenarioText: "Reflexionas un momento y respondes de forma calmada, expresando tu punto de vista sin agredir a nadie.", applied: true },
+            { id: 13, agreement: "Sé impecable con tus palabras", situation: "Hablar de un error que cometiste.", scenarioText: "Dices: 'Soy un fracasado, nunca haré esto bien'.", applied: false },
+            { id: 14, agreement: "Sé impecable con tus palabras", situation: "Hablar de un error que cometiste.", scenarioText: "Te hablas con compasión: 'Cometí un error, pero de esto aprenderé a hacerlo mejor la próxima vez'.", applied: true },
+            { id: 15, agreement: "Sé impecable con tus palabras", situation: "Un familiar te pregunta sobre tus planes.", scenarioText: "Respondes con sarcasmo o gritas. 'No te metas en mi vida'.", applied: false },
+            { id: 16, agreement: "Sé impecable con tus palabras", situation: "Un familiar te pregunta sobre tus planes.", scenarioText: "Respondes: 'Me siento frustrado cuando esto sucede, ¿podemos hablarlo?'.", applied: true },
+
+            { id: 17, agreement: "No te tomes nada personalmente", situation: "Un amigo cancela planes a último minuto.", scenarioText: "Piensas: 'Seguro que está enojado conmigo', te sientes mal y te lo tomas como un desprecio personal.", applied: false },
+            { id: 18, agreement: "No te tomes nada personalmente", situation: "Un amigo cancela planes a último minuto.", scenarioText: "Piensas: 'Quizás está muy ocupado, tuvo una emergencia o simplemente no se siente bien', y no dejas que te afecte.", applied: true },
+            { id: 19, agreement: "No te tomes nada personalmente", situation: "Recibes una crítica constructiva de un profesor o jefe.", scenarioText: "Sientes que tu trabajo es un fracaso y que la crítica es un ataque a tu valor como persona.", applied: false },
+            { id: 20, agreement: "No te tomes nada personalmente", situation: "Recibes una crítica constructiva de un profesor o jefe.", scenarioText: "Ves la crítica como una herramienta para mejorar, no como un ataque personal. Preguntas: '¿Cómo puedo aplicar estos comentarios para mi próximo trabajo?'.", applied: true },
+            { id: 21, agreement: "No te tomes nada personalmente", situation: "No te invitan a un plan de tu grupo de amigos.", scenarioText: "Piensas: 'Me están excluyendo, ya no les caigo bien', te sientes triste o enojado.", applied: false },
+            { id: 22, agreement: "No te tomes nada personalmente", situation: "No te invitan a un plan de tu grupo de amigos.", scenarioText: "Entiendes que no siempre te pueden invitar a todo y no es una falta de aprecio. En el futuro, invitas a tus amigos a planes que tú organices.", applied: true },
+            { id: 23, agreement: "No te tomes nada personalmente", situation: "Tu pareja o un amigo no responde tus mensajes de texto.", scenarioText: "Piensas: 'Seguro que está enojado conmigo', te sientes mal y te lo tomas como un desprecio personal.", applied: false },
+            { id: 24, agreement: "No te tomes nada personalmente", situation: "Tu pareja o un amigo no responde tus mensajes de texto.", scenarioText: "Piensas: 'Quizás está ocupado, su celular se quedó sin batería o simplemente no ha visto mi mensaje', y no dejas que te afecte.", applied: true },
+            { id: 25, agreement: "No te tomes nada personalmente", situation: "Te encuentras con alguien que te cae mal y te mira mal.", scenarioText: "Te enojas, te sientes inseguro y empiezas a juzgar tu cuerpo.", applied: false },
+            { id: 26, agreement: "No te tomes nada personalmente", situation: "Te encuentras con alguien que te cae mal y te mira mal.", scenarioText: "Entiendes que su mirada es un reflejo de sus propias creencias, no de tu valor. Puedes responder: 'Mi cuerpo es mío y me siento bien con él'.", applied: true },
+            { id: 27, agreement: "No te tomes nada personalmente", situation: "Alguien se ríe en clase mientras tú das una presentación.", scenarioText: "Crees que se están burlando de ti y te sientes humillado.", applied: false },
+            { id: 28, agreement: "No te tomes nada personalmente", situation: "Alguien se ríe en clase mientras tú das una presentación.", scenarioText: "Te concentras en tu presentación. Entiendes que la risa puede ser por cualquier cosa y no tiene por qué tener nada que ver contigo.", applied: true },
+            { id: 29, agreement: "No te tomes nada personalmente", situation: "Tu equipo de deportes pierde un partido importante.", scenarioText: "Te sientes responsable de la derrota y crees que 'eres un perdedor'.", applied: false },
+            { id: 30, agreement: "No te tomes nada personalmente", situation: "Tu equipo de deportes pierde un partido importante.", scenarioText: "Aceptas que la derrota es del equipo. Te concentras en lo que puedes aprender del partido para mejorar.", applied: true },
+            { id: 31, agreement: "No te tomes nada personalmente", situation: "Un compañero te hace una broma que no te gusta.", scenarioText: "Te sientes ofendido y le pones mala cara el resto del día.", applied: false },
+            { id: 32, agreement: "No te tomes nada personalmente", situation: "Un compañero te hace una broma que no te gusta.", scenarioText: "Entiendes que la broma es un reflejo de su humor, no de tu valor. Puedes decirle: 'No me gustó esa broma, por favor no lo hagas de nuevo'.", applied: true },
+            { id: 33, agreement: "No te tomes nada personalmente", situation: "Alguien te acusa injustamente de algo que no hiciste.", scenarioText: "Te pones a la defensiva y te enojas con la persona que te acusó.", applied: false },
+            { id: 34, agreement: "No te tomes nada personalmente", situation: "Alguien te acusa injustamente de algo que no hiciste.", scenarioText: "Te mantienes sereno, ya que sabes que no es verdad, y explicas tu punto de vista con calma.", applied: true },
+            { id: 35, agreement: "No te tomes nada personalmente", situation: "Un familiar te hace un comentario sobre tu peso o apariencia.", scenarioText: "Te enojas, te sientes inseguro y empiezas a juzgar tu cuerpo.", applied: false },
+            { id: 36, agreement: "No te tomes nada personalmente", situation: "Un familiar te hace un comentario sobre tu peso o apariencia.", scenarioText: "Entiendes que su comentario es un reflejo de sus propias creencias, no de tu valor. Puedes responder: 'Mi cuerpo es mío y me siento bien con él'.", applied: true },
+            { id: 37, agreement: "No te tomes nada personalmente", situation: "Te dan un consejo que no pediste.", scenarioText: "Lo tomas como una crítica y te preguntas por qué esa persona cree que necesitas un consejo.", applied: false },
+            { id: 38, agreement: "No te tomes nada personalmente", situation: "Te dan un consejo que no pediste.", scenarioText: "Ves el consejo como una opinión y decides si te es útil o no. Agradeces y sigues con tu día.", applied: true },
+
+            { id: 39, agreement: "No hagas suposiciones", situation: "Alguien no te saluda en el pasillo de la escuela.", scenarioText: "Asumes que te está ignorando a propósito, que está enojado contigo o que ya no te considera su amigo.", applied: false },
+            { id: 40, agreement: "No hagas suposiciones", situation: "Alguien no te saluda en el pasillo de la escuela.", scenarioText: "Piensas: 'Tal vez no me vio', 'Estaba distraído' o 'Tuvo un mal día'. No le das más vueltas y sigues tu camino.", applied: true },
+            { id: 41, agreement: "No hagas suposiciones", situation: "Un compañero de trabajo o estudio se ve cansado.", scenarioText: "Asumes que está enojado o de mal humor, y evitas hablarle para no molestarlo.", applied: false },
+            { id: 42, agreement: "No hagas suposiciones", situation: "Un compañero de trabajo o estudio se ve cansado.", scenarioText: "Preguntas: '¿Cómo estás? Te ves cansado, ¿puedo ayudarte en algo?'.", applied: true },
+            { id: 43, agreement: "No hagas suposiciones", situation: "Un amigo te dice que tiene que contarte algo 'importante'.", scenarioText: "Asumes que es una mala noticia o que estás en problemas por algo que hiciste.", applied: false },
+            { id: 44, agreement: "No hagas suposiciones", situation: "Un amigo te dice que tiene que contarte algo 'importante'.", scenarioText: "Le preguntas con calma: '¿Es algo malo? Si es algo importante, dime qué pasa'.", applied: true },
+            { id: 45, agreement: "No hagas suposiciones", situation: "Tu pareja o un familiar está en silencio.", scenarioText: "Asumes que están enojados contigo o que estás en problemas por algo que hiciste.", applied: false },
+            { id: 46, agreement: "No hagas suposiciones", situation: "Tu pareja o un familiar está en silencio.", scenarioText: "Preguntas: '¿Qué te preocupa? ¿Hay algo que te gustaría hablar?'.", applied: true },
+            { id: 47, agreement: "No hagas suposiciones", situation: "Un amigo te pide un favor sin darte todos los detalles.", scenarioText: "Te comprometes a ayudarlo, suponiendo que el favor será algo simple.", applied: false },
+            { id: 48, agreement: "No hagas suposiciones", situation: "Un amigo te pide un favor sin darte todos los detalles.", scenarioText: "Preguntas para no dar nada por sentado: '¿Podrías darme más detalles? Necesito saber qué implica para poder ayudarte'.", applied: true },
+            { id: 49, agreement: "No hagas suposiciones", situation: "Un nuevo compañero de clase es callado y no habla mucho.", scenarioText: "Asumes que es una persona seria o que no quiere ser tu amigo.", applied: false },
+            { id: 50, agreement: "No hagas suposiciones", situation: "Un nuevo compañero de clase es callado y no habla mucho.", scenarioText: "Te acercas y lo saludas: 'Hola, soy [tu nombre]. ¿Qué opinas de la clase?'.", applied: true },
+            { id: 51, agreement: "No hagas suposiciones", situation: "Te enteras de un rumor sobre alguien.", scenarioText: "Das el rumor por cierto y lo difundes a tus amigos.", applied: false },
+            { id: 52, agreement: "No hagas suposiciones", situation: "Te enteras de un rumor sobre alguien.", scenarioText: "Preguntas a la persona de la que se habla. Si es una historia sobre alguien que no conoces, simplemente la ignoras.", applied: true },
+            { id: 53, agreement: "No hagas suposiciones", situation: "No estás seguro de las reglas de un juego o de un proyecto escolar.", scenarioText: "Intentas adivinar las reglas y cometes errores, lo que te hace sentir frustrado.", applied: false },
+            { id: 54, agreement: "No hagas suposiciones", situation: "No estás seguro de las reglas de un juego o de un proyecto escolar.", scenarioText: "Preguntas las reglas a alguien que ya las sabe o las buscas en internet.", applied: true },
+            { id: 55, agreement: "No hagas suposiciones", situation: "Alguien te hace una pregunta que te parece extraña.", scenarioText: "Supones que la persona te está juzgando o te quiere incomodar.", applied: false },
+            { id: 56, agreement: "No hagas suposiciones", situation: "Alguien te hace una pregunta que te parece extraña.", scenarioText: "Haces una pregunta para aclarar la situación: '¿Por qué me preguntas eso?'.", applied: true },
+
+            { id: 57, agreement: "Haz siempre lo mejor que puedas", situation: "Tienes que estudiar para 3 exámenes en un día.", scenarioText: "Te estresas, te rindes y no estudias nada porque piensas que no lo lograrás.", applied: false },
+            { id: 58, agreement: "Haz siempre lo mejor que puedas", situation: "Tienes que estudiar para 3 exámenes en un día.", scenarioText: "Entiendes que tu 'mejor esfuerzo' hoy es menor que lo habitual. Decides estudiar 1 hora para cada examen en lugar de 3, y te sientes satisfecho por haber intentado.", applied: true },
+            { id: 59, agreement: "Haz siempre lo mejor que puedas", situation: "Un amigo te pide ayuda con un proyecto difícil.", scenarioText: "Lo ayudas a la mitad, te rindes y te vas.", applied: false },
+            { id: 60, agreement: "Haz siempre lo mejor que puedas", situation: "Un amigo te pide ayuda con un proyecto difícil.", scenarioText: "Das tu mejor esfuerzo, y cuando ya no puedes hacer más, le dices: 'Hice mi mejor esfuerzo, pero necesito irme ahora. Te deseo suerte'.", applied: true },
+            { id: 61, agreement: "Haz siempre lo mejor que puedas", situation: "No obtienes un puesto en un equipo deportivo.", scenarioText: "Te castigas por 'no haber sido lo suficientemente bueno' y te rindes. Decides que no lo volverás a intentar.", applied: false },
+            { id: 62, agreement: "Haz siempre lo mejor que puedas", situation: "No obtienes un puesto en un equipo deportivo.", scenarioText: "Aceptas que hiciste tu mejor esfuerzo y el resultado no dependió solo de ti. Analizas la experiencia para prepararte mejor para la próxima oportunidad.", applied: true },
+            { id: 63, agreement: "Haz siempre lo mejor que puedas", situation: "Te sientes abrumado por las tareas.", scenarioText: "No haces nada y te sientes culpable al final del día.", applied: false },
+            { id: 64, agreement: "Haz siempre lo mejor que puedas", situation: "Te sientes abrumado por las tareas.", scenarioText: "Decides hacer al menos una de tus tareas, sabiendo que aunque no es todo, es tu mejor esfuerzo de ese día.", applied: true },
+            { id: 65, agreement: "Haz siempre lo mejor que puedas", situation: "Quieres hacer ejercicio pero estás cansado.", scenarioText: "No haces ejercicio y te sientes frustrado.", applied: false },
+            { id: 66, agreement: "Haz siempre lo mejor que puedas", situation: "Quieres hacer ejercicio pero estás cansado.", scenarioText: "Entiendes que tu 'mejor esfuerzo' hoy no es un entrenamiento completo. Decides dar un pequeño paseo, sabiendo que es lo mejor que puedes hacer en ese momento.", applied: true },
+            { id: 67, agreement: "Haz siempre lo mejor que puedas", situation: "Cocinas algo por primera vez y no queda bien.", scenarioText: "Te enojas y te dices que no sirves para cocinar.", applied: false },
+            { id: 68, agreement: "Haz siempre lo mejor que puedas", situation: "Cocinas algo por primera vez y no queda bien.", scenarioText: "Aceptas que el primer intento no siempre es perfecto y te dices: 'Intentaré esta receta de nuevo, aprendiendo de lo que hice mal'.", applied: true },
+            { id: 69, agreement: "Haz siempre lo mejor que puedas", situation: "Te frustras por no entender una materia.", scenarioText: "Dejas de asistir a las clases, no estudias y te das por vencido.", applied: false },
+            { id: 70, agreement: "Haz siempre lo mejor que puedas", situation: "Te frustras por no entender una materia.", scenarioText: "Sabes que tu mejor esfuerzo es pedir ayuda, así que hablas con el profesor o con un tutor para recibir apoyo.", applied: true },
+            { id: 71, agreement: "Haz siempre lo mejor que puedas", situation: "No obtienes un trabajo al que aplicaste.", scenarioText: "Piensas: 'No fui lo suficientemente bueno' y te rindes.", applied: false },
+            { id: 72, agreement: "Haz siempre lo mejor que puedas", situation: "No obtienes un trabajo al que aplicaste.", scenarioText: "Entiendes que hiciste tu mejor esfuerzo en la entrevista. Te dices a ti mismo: 'El resultado no dependía solo de mí, pero aprendí de la experiencia'.", applied: true },
+            { id: 73, agreement: "Haz siempre lo mejor que puedas", situation: "Te equivocaste y le mentiste a tus padres.", scenarioText: "Sientes vergüenza y culpa, y no vuelves a tocar el tema.", applied: false },
+            { id: 74, agreement: "Haz siempre lo mejor que puedas", situation: "Te equivocaste y le mentiste a tus padres.", scenarioText: "Sabes que tu mejor esfuerzo es ser honesto. Te disculpas y confiesas la mentira para que no vuelva a pasar.", applied: true },
+            { id: 75, agreement: "Haz siempre lo mejor que puedas", situation: "Estás en una discusión con tu pareja.", scenarioText: "Gritas y alzas la voz para que te escuche, aunque sabes que no es la mejor manera de comunicar.", applied: false },
+            { id: 76, agreement: "Haz siempre lo mejor que puedas", situation: "Estás en una discusión con tu pareja.", scenarioText: "Sabes que tu mejor esfuerzo es ser asertivo y calmado, y lo aplicas a la conversación.", applied: true }
+        ];
+
+        const QUIZ_LENGTH = 20;
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        let shuffledQuestions = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const scenarioText = document.getElementById('scenario-text');
+        const agreementButtons = document.querySelectorAll('.buttons-group button');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const summaryTextEl = document.getElementById('summary-text');
+        const progressEl = document.getElementById('progress');
+        const scoreCounterEl = document.getElementById('score-counter');
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= QUIZ_LENGTH) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            scenarioText.textContent = currentQuestion.scenarioText;
+            feedbackEl.textContent = '';
+            answered = false;
+            nextBtn.style.display = 'none';
+            progressEl.textContent = `Pregunta ${currentQuestionIndex + 1} de ${QUIZ_LENGTH}`;
+            scoreCounterEl.textContent = `Correctas: ${score} de ${QUIZ_LENGTH}`;
+
+            agreementButtons.forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+                btn.disabled = false;
+            });
+        }
+
+        function checkAnswer(selectedAgreement) {
+            if (answered) return;
+            answered = true;
+
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const isCorrect = (selectedAgreement === currentQuestion.agreement);
+
+            if (isCorrect) {
+                score++;
+                feedbackEl.textContent = '¡Correcto! +1 punto.';
+                feedbackEl.style.color = '#4CAF50';
+                document.querySelector(`[data-acuerdo="${selectedAgreement}"]`).classList.add('correct');
+            } else {
+                feedbackEl.textContent = 'Incorrecto. La respuesta correcta está resaltada.';
+                feedbackEl.style.color = '#F44336';
+                document.querySelector(`[data-acuerdo="${selectedAgreement}"]`).classList.add('incorrect');
+                document.querySelector(`[data-acuerdo="${currentQuestion.agreement}"]`).classList.add('correct');
+            }
+
+            scoreCounterEl.textContent = `Correctas: ${score} de ${QUIZ_LENGTH}`;
+
+            agreementButtons.forEach(btn => btn.disabled = true);
+
+            if (currentQuestionIndex >= QUIZ_LENGTH - 1) {
+                nextBtn.textContent = 'Volver a Jugar';
+            } else {
+                nextBtn.textContent = 'Siguiente Escenario';
+            }
+            nextBtn.style.display = 'block';
+        }
+
+        agreementButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                checkAnswer(button.dataset.acuerdo);
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex >= QUIZ_LENGTH - 1) {
+                location.reload();
+            } else {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        });
+
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            const percentage = (score / QUIZ_LENGTH) * 100;
+
+            finalScoreEl.textContent = `Tu puntaje final es: ${score} de ${QUIZ_LENGTH} (${percentage.toFixed(0)}%).`;
+
+            if (percentage >= 80) {
+                summaryTextEl.textContent = '¡Felicidades! Tienes un excelente entendimiento de los Cuatro Acuerdos. Sigue practicando.';
+            } else if (percentage >= 50) {
+                summaryTextEl.textContent = 'Lo has hecho muy bien. Con un poco más de práctica, dominarás los Cuatro Acuerdos.';
+            } else {
+                summaryTextEl.textContent = 'Tuviste un buen comienzo. Te animamos a repasar los conceptos para mejorar tus habilidades de comunicación.';
+            }
+        }
+
+        shuffledQuestions = shuffle(allQuestions).slice(0, QUIZ_LENGTH);
+        loadQuestion();
+    </script>
+</body>
+
+</html>
