@@ -15,34 +15,58 @@ const db = firebase.database();
 // --- GAME DATA ---
 const questions = [
     {
-        q: "Observa la gráfica: Inicio con VOLUMEN gigante (Azul) e INTENSIDAD baja. Al final se cruzan (Tijeretazo). ¿Qué modelo es?",
-        options: ["Modelo ATR", "Modelo Clásico (Matveev)", "Modelo de Bloques", "Péndulo"],
+        q: "En Microsoft Word, ¿cuál es la función principal de la pestaña 'Referencias' al redactar un trabajo académico?",
+        options: ["Revisar la ortografía y gramática del contenido", "Insertar citas en el texto y generar automáticamente la bibliografía", "Cambiar el diseño de página y los márgenes del documento"],
         correct: 1,
-        explanation: "💡 POR QUÉ: Es la firma visual de Matveev. El volumen crea la base piramidal ancha al inicio, y debe bajar forzosamente para que suba la intensidad."
+        explanation: "💡 POR QUÉ: La pestaña Referencias permite administrar fuentes, insertar citas (APA, etc.) y generar la bibliografía automáticamente, fundamental para trabajos académicos."
     },
     {
-        q: "La analogía del 'LÁSER vs BOMBILLA' explica la diferencia entre Cargas Concentradas y Distribuidas. ¿A qué modelo corresponde el LÁSER?",
-        options: ["Modelo de Bloques (Verkhoshansky)", "Modelo Clásico", "Modelo Multicíclico", "Ninguno"],
+        q: "Si deseas obtener tu Acta de Nacimiento certificada de forma digital en México, ¿a qué portal oficial debes acudir?",
+        options: ["www.gob.mx", "www.ine.org.mx", "Página oficial de Facebook del Registro Civil"],
         correct: 0,
-        explanation: "💡 POR QUÉ: Verkhoshansky propone concentrar toda la energía en una sola capacidad (Fuerza) como un láser, en vez de iluminar todo suavemente (repartir cargas) como el modelo clásico."
+        explanation: "💡 POR QUÉ: Es el portal único del Gobierno de México que centraliza trámites como actas de nacimiento y CURP."
     },
     {
-        q: "En el fútbol, no podemos parar 3 meses para entrenar base. Usamos bloques cortos: Acumulación, Transformación y...",
-        options: ["Competición", "Recuperación", "Realización", "Transición"],
+        q: "¿Cuál es la función del portal 'SIGED' en el contexto de los servicios de educación en México?",
+        options: ["Consultar información del sistema educativo, como certificados y boletas", "Agendar citas para servicios de salud", "Pagar impuestos federales"],
+        correct: 0,
+        explanation: "💡 POR QUÉ: El Sistema de Información y Gestión Educativa (SIGED) permite consultar registros escolares oficiales y documentos académicos."
+    },
+    {
+        q: "Al extraviar o sufrir el robo de un dispositivo móvil, ¿cuál debería ser el primer paso para proteger tu identidad digital?",
+        options: ["Esperar a que alguien lo devuelva antes de cambiar contraseñas", "Comprar un dispositivo nuevo inmediatamente", "Utilizar herramientas de rastreo remoto para bloquearlo o borrarlo"],
         correct: 2,
-        explanation: "💡 POR QUÉ: El ciclo ATR termina en Realización. Es cuando el embudo suelta el 'chorro' de rendimiento acumulado para el partido del domingo."
+        explanation: "💡 POR QUÉ: Es crucial bloquear el acceso a tus datos personales lo antes posible (usando 'Encontrar mi dispositivo' o similar) para evitar robo de identidad."
     },
     {
-        q: "El modelo de 'Doble Pico' (Bicíclico) se usa cuando hay dos competencias fundamentales. ¿Qué se necesita en medio de ambas?",
-        options: ["Más entrenamiento intenso", "Un valle de Transición/Recuperación", "Competencias secundarias", "Nada"],
+        q: "¿Por qué es fundamental reportar el IMEI de un teléfono robado a tu operadora telefónica?",
+        options: ["Para mejorar la señal de internet de tu casa", "Para inhabilitar el dispositivo y que no pueda ser usado en ninguna red móvil", "Para que la operadora te regale un equipo nuevo"],
         correct: 1,
-        explanation: "💡 POR QUÉ: No puedes saltar de la cima del Everest al K2. Debes bajar al campamento base (Transición) para regenerar física y mentalmente antes de volver a subir."
+        explanation: "💡 POR QUÉ: El reporte de IMEI coloca el equipo en una lista negra global, impidiendo su uso telefónico (llamadas y datos) en la mayoría de operadoras."
     },
     {
-        q: "¿Cuál es el objetivo principal del Modelo Pendular (Boxeo)?",
-        options: ["Ganar masa muscular", "Evitar el aburrimiento del Sistema Nervioso", "Entrenar solo técnica", "Correr maratones"],
+        q: "En el desarrollo de una página web, ¿cuál es el propósito principal del lenguaje HTML?",
+        options: ["Crear animaciones complejas y funciones lógicas", "Darle colores, fuentes y estilos visuales a la página", "Definir la estructura y el contenido de la página"],
+        correct: 2,
+        explanation: "💡 POR QUÉ: HTML es el esqueleto que organiza los elementos de información (títulos, párrafos, imágenes) en la web."
+    },
+    {
+        q: "¿Cuál es la función del lenguaje CSS en un sitio web?",
+        options: ["Almacenar los datos de los usuarios en una base de datos", "Controlar la apariencia visual y el diseño de los elementos", "Establecer la conexión a internet de la página"],
         correct: 1,
-        explanation: "💡 POR QUÉ: Alternar cargas Generales y Específicas (como un columpio) mantiene al Sistema Nervioso 'fresco' y evita la acomodación o estancamiento ante estímulos monótonos."
+        explanation: "💡 POR QUÉ: CSS (Hojas de Estilo en Cascada) es el lenguaje responsable de dar estilo, color, tipografía y diseño a la estructura base creada con HTML."
+    },
+    {
+        q: "¿Qué lenguaje se encarga de la interactividad y el comportamiento dinámico (como validación de formularios) en el navegador?",
+        options: ["Word", "HTML", "JavaScript (JS)"],
+        correct: 2,
+        explanation: "💡 POR QUÉ: JavaScript es el motor que permite que las páginas web 'hagan cosas', agregando lógica, interactividad y dinamismo."
+    },
+    {
+        q: "¿Cuál de las siguientes es una buena práctica para proteger tu identidad digital en servicios de salud o gobierno?",
+        options: ["Activar la verificación en dos pasos (2FA) siempre que esté disponible", "Usar la misma contraseña en todos los portales para no confundirte", "Compartir tu contraseña con familiares cercanos por si se te olvida"],
+        correct: 0,
+        explanation: "💡 POR QUÉ: La verificación en dos pasos añade una capa extra de seguridad crucial, protegiendo tu cuenta incluso si alguien obtiene tu contraseña."
     }
 ];
 
