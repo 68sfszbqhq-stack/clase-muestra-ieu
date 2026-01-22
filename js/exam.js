@@ -360,9 +360,9 @@ function showReveal(idx) {
 
 // --- AUDIO FX ---
 const sounds = {
-    click: new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'),
-    cheer: new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3'),
-    reveal: new Audio('https://www.soundjay.com/misc/sounds/magic-chime-01.mp3')
+    click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    cheer: new Audio('https://assets.mixkit.co/active_storage/sfx/95/95-preview.mp3'),
+    reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3')
 };
 
 function playSound(type) {
