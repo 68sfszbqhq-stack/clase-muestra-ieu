@@ -133,7 +133,8 @@ document.getElementById('joinForm').addEventListener('submit', (e) => {
     });
 
     // Handle disconnect
-    db.ref(`players/${myPlayerId}`).onDisconnect().remove();
+    // Handle disconnect - DISABLED to persist data for history
+    // db.ref(`players/${myPlayerId}`).onDisconnect().remove();
 
     showScreen('lobby');
 });
