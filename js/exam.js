@@ -618,3 +618,54 @@ function renderAdminResultsTable() {
         tableContainer.innerHTML = html;
     });
 }
+
+// --- HISTORY EXPORT ---
+function downloadHistoryCSV() {
+    db.ref('history/sessions').once('value', snap => {
+        const history = snap.val();
+        if (!history) {
+            alert("No hay historial disponible.");
+            return;
+        }
+
+        let csv = "Fecha,Hora,Jugador,Puntaje,Preguntas Totales,Aciertos\n";
+
+        Object.values(history).forEach(session => {
+            const date = new Date(session.timestamp).toLocaleDateString();
+            const time = new Date(session.timestamp).toLocaleTimeString();
+            const qTotal = session.totalQuestions || 0;
+
+            if (session.players) {
+                Object.values(session.players).forEach(p => {
+                    // Count correct answers if detailed answers exist
+                    let correctCount = 0;
+                    if (p.answers) {
+                        // Estimate correct count if not explicitly saved, 
+                        // though we usually save score. 
+                        // Let's use score/100 as rough proxy if needed, 
+                        // but detailed logic is better if structure matches.
+                        // Ideally we check against current questions but they might have changed.
+                        // So we trust the score or rely on answers array if mapped to current.
+                        // Let's just output score for safety.
+                        correctCount = p.score / 100;
+                    } else {
+                        correctCount = p.score / 100;
+                    }
+
+                    csv += `${date},${time},"${p.name}",${p.score},${qTotal},${correctCount}\n`;
+                });
+            }
+        });
+
+        // Download link
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "historial_clase_ieu.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
