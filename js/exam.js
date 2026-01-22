@@ -74,6 +74,7 @@ const questions = [
 let myPlayerId = localStorage.getItem('ieu_playerId');
 let myName = localStorage.getItem('ieu_playerName');
 let isAdmin = false;
+let currentQIdx = 0; // Track current question for history
 
 // DOM Elements
 const screens = {
@@ -150,12 +151,16 @@ function submitAnswer(optionIdx) {
 
     // Send to Firebase
     db.ref(`players/${myPlayerId}/lastAnswer`).set(optionIdx);
+
+    // GUARDAR HISTORIAL DE RESPUESTAS para la tabla final
+    db.ref(`players/${myPlayerId}/answers/${currentQIdx}`).set(optionIdx);
 }
 
 // --- SYNC LOGIC (CORE) ---
 
 function syncInterface(state) {
     const { phase, questionIdx, reveal } = state;
+    currentQIdx = questionIdx; // Update global tracker
 
     // Admin UI always shows controls
     if (isAdmin) {
@@ -241,6 +246,11 @@ function syncInterface(state) {
     else if (phase === 'final') {
         showScreen('final');
         renderPodium();
+
+        // Mostrar Tabla Detallada SOLO AL ADMIN
+        if (isAdmin) {
+            renderAdminResultsTable();
+        }
     }
 }
 
@@ -435,9 +445,29 @@ function adminNextPhase() {
                 });
                 db.ref('gameState').update({ phase: 'question', questionIdx: nextIdx, reveal: false });
             } else {
+                // SAVE HISTORY BEFORE SHOWING FINAL SCREEN
+                saveGameHistory();
                 db.ref('gameState').update({ phase: 'final' });
             }
         }
+    });
+}
+
+function saveGameHistory() {
+    db.ref('players').once('value', snap => {
+        const playersData = snap.val();
+        if (!playersData) return;
+
+        const sessionData = {
+            timestamp: Date.now(),
+            date: new Date().toISOString(),
+            totalQuestions: questions.length,
+            players: playersData
+        };
+
+        // Push to history node
+        db.ref('history/sessions').push(sessionData);
+        console.log("Game history saved!");
     });
 }
 
@@ -513,5 +543,78 @@ function renderPodium() {
             `;
             pod.appendChild(row);
         });
+    });
+}
+
+// --- ADMIN RESULTS TABLE (New) ---
+function renderAdminResultsTable() {
+    let tableContainer = document.getElementById('admin-results-table');
+    if (!tableContainer) {
+        tableContainer = document.createElement('div');
+        tableContainer.id = 'admin-results-table';
+        tableContainer.style.marginTop = "3rem";
+        tableContainer.style.background = "white";
+        tableContainer.style.padding = "20px";
+        tableContainer.style.borderRadius = "15px";
+        tableContainer.style.overflowX = "auto";
+        document.getElementById('screen-final').appendChild(tableContainer);
+    }
+
+    tableContainer.innerHTML = '<h3>📊 Tabla Detallada de Resultados</h3><p>Cargando datos...</p>';
+
+    db.ref('players').once('value', snap => {
+        let html = `
+            <table style="width:100%; border-collapse: collapse; font-size: 0.9rem; color: #333;">
+                <thead>
+                    <tr style="background:var(--ieu-orange); color:white; text-align:left;">
+                        <th style="padding:10px;">Jugador</th>
+                        <th style="padding:10px;">Puntaje</th>
+        `;
+
+        // Add Headers for questions
+        questions.forEach((q, i) => {
+            html += `<th style="padding:10px; text-align:center;">Q${i + 1}</th>`;
+        });
+
+        html += `</tr></thead><tbody>`;
+
+        const players = [];
+        snap.forEach(p => players.push(p.val()));
+
+        // Sort by score desc like leaderboard
+        players.sort((a, b) => b.score - a.score);
+
+        players.forEach((p, index) => {
+            const bg = index % 2 === 0 ? '#f9f9f9' : '#fff';
+            html += `<tr style="background:${bg}; border-bottom:1px solid #eee;">
+                        <td style="padding:10px; font-weight:bold;">${p.name}</td>
+                        <td style="padding:10px;">${p.score}</td>`;
+
+            // Loop questions for storing answers
+            questions.forEach((q, qIndex) => {
+                let cellContent = '-';
+                let cellColor = '#ccc';
+
+                // Check if answer exists in history
+                if (p.answers && p.answers[qIndex] !== undefined) {
+                    const ans = p.answers[qIndex];
+                    if (ans === q.correct) {
+                        cellContent = '✅';
+                        cellColor = '#e8f5e9'; // Light green
+                    } else {
+                        cellContent = '❌';
+                        // cellContent += ` (${String.fromCharCode(65 + ans)})`; // Option letter
+                        cellColor = '#ffebee'; // Light red
+                    }
+                }
+
+                html += `<td style="padding:10px; text-align:center; background:${cellColor};">${cellContent}</td>`;
+            });
+
+            html += `</tr>`;
+        });
+
+        html += `</tbody></table>`;
+        tableContainer.innerHTML = html;
     });
 }
