@@ -292,6 +292,9 @@
         <a href="#" class="nav-item">
             <i class="fa-solid fa-trophy"></i> Logros
         </a>
+        <a href="#" class="nav-item" onclick="logout()" style="cursor: pointer;">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+        </a>
 
         <div class="user-profile">
             <div class="avatar">JM</div>
@@ -439,3 +442,11 @@
 </body>
 
 </html>
+<script>
+    function logout() {
+        // Limpiar posible sesión local
+        localStorage.removeItem('lms_guest_user');
+        // Redirigir al índice/login
+        window.location.href = 'lms_index.html';
+    }
+</script>
