@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Examen Tech: Fundamentos Digitales | IEU</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --tech-green: #00C896;
+            --tech-purple: #7C3AED;
+        }
+
+        body {
+            background: var(--ieu-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* PANTALLAS */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active { display: flex; }
+
+        /* LOGIN */
+        .login-box {
+            background: white;
+            color: #333;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* LOBBY */
+        .lobby-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .player-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.9rem;
+        }
+
+        /* QR CODE */
+        #admin-qr-section {
+            display: none;
+            text-align: center;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .qr-wrapper {
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            display: inline-block;
+            margin: 0.8rem auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        #student-url-text {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            word-break: break-all;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        /* PREGUNTA */
+        .question-box {
+            background: white;
+            color: #333;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #q-counter {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: normal;
+            margin-bottom: 0.5rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .option-btn {
+            padding: 1.2rem 0.8rem;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            line-height: 1.3;
+        }
+
+        .option-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .opt-0 { background-color: #e21b3c; }
+        .opt-1 { background-color: #1368ce; }
+        .opt-2 { background-color: #d89e00; }
+        .opt-3 { background-color: #26890c; }
+
+        .option-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .option-btn.selected {
+            border: 4px solid white;
+            transform: scale(1.05);
+        }
+
+        /* RESULTADOS */
+        .bars-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 180px;
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+
+        .bar {
+            width: 100%;
+            transition: height 0.5s ease;
+            border-radius: 5px 5px 0 0;
+            min-height: 5px;
+        }
+
+        .bar-val {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* ADMIN BAR */
+        #admin-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1a1a2e;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            border-top: 2px solid var(--ieu-orange);
+            gap: 8px;
+        }
+
+        .admin-btn {
+            background: #2d2d2d;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            flex: 1;
+            max-width: 140px;
+        }
+
+        .admin-btn.primary {
+            background: var(--ieu-orange);
+            border: none;
+            font-size: 1rem;
+        }
+
+        /* ANIMACIONES */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Header decorativo */
+        .tech-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-header h1 {
+            font-size: 1.8rem;
+            margin: 0.3rem 0;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: var(--ieu-orange);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 400px) {
+            .option-btn { font-size: 0.85rem; padding: 1rem 0.5rem; }
+            .question-box { font-size: 1rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PANTALLA 1: LOGIN -->
+    <div id="screen-login" class="screen active">
+        <div class="tech-header">
+            <div class="tech-badge">💻 Fundamentos Digitales</div>
+            <h1>Quiz Tecnología</h1>
+            <p style="opacity: 0.7; margin: 0;">Ingresa tu nombre para unirte</p>
+        </div>
+
+        <div class="login-box">
+            <form id="joinForm">
+                <input type="text" id="playerName" placeholder="Tu Nombre" maxlength="20" required autocomplete="off">
+                <button type="submit" class="btn-primary" style="width: 100%; font-size: 1.2rem; padding: 15px;">
+                    🚀 Unirme al Examen
+                </button>
+            </form>
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.4; cursor: pointer;" onclick="enableAdminMode()">
+            <i class="fa-solid fa-lock"></i> Acceso Profesor
+        </p>
+    </div>
+
+    <!-- PANTALLA 2: LOBBY -->
+    <div id="screen-lobby" class="screen">
+        <div class="tech-header">
+            <div class="tech-badge">Sala de Espera</div>
+            <h1 style="color: var(--ieu-orange);">⏳ Esperando...</h1>
+            <p style="opacity: 0.8;">El profesor iniciará el examen en breve</p>
+        </div>
+
+        <div id="lobby-count" style="font-size: 3.5rem; font-weight: bold; margin: 1rem 0; color: var(--ieu-orange);">0</div>
+        <p style="opacity: 0.7;">Estudiantes conectados</p>
+
+        <!-- Lista de jugadores (admin) -->
+        <div id="admin-player-list" class="lobby-list" style="display: none;"></div>
+
+        <!-- QR Code (solo admin) -->
+        <div id="admin-qr-section">
+            <p style="color: var(--ieu-orange); font-weight: bold; margin-bottom: 0.5rem;">
+                📱 Muestra este QR a tus alumnos:
+            </p>
+            <div class="qr-wrapper">
+                <div id="qr-code"></div>
+            </div>
+            <p id="student-url-text"></p>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: JUEGO -->
+    <div id="screen-game" class="screen">
+        <!-- Indicador de progreso -->
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span id="q-counter" style="font-size: 0.85rem; opacity: 0.7;">1 / 22</span>
+            <span style="font-size: 0.85rem; opacity: 0.7;">💻 Tech Quiz</span>
+        </div>
+
+        <div class="question-box">
+            <div id="q-text">Cargando pregunta...</div>
+        </div>
+
+        <div id="options-container" class="options-grid">
+            <!-- Botones generados por JS -->
+        </div>
+
+        <p id="feedback-msg" style="margin-top: 1.2rem; font-size: 1.1rem; font-weight: bold; min-height: 1.4rem; text-align: center;"></p>
+    </div>
+
+    <!-- PANTALLA 4: RESULTADOS PARCIALES -->
+    <div id="screen-results" class="screen">
+        <h2 style="margin-bottom: 0.5rem;">📊 Resultados en Vivo</h2>
+
+        <div id="chart-container" class="bars-container"></div>
+
+        <div id="correct-answer-reveal"
+            style="margin-top: 1.5rem; background: #fff; color: #333; padding: 1.2rem; border-radius: 12px; width: 100%; text-align: center; display: none;">
+            <p style="font-size: 0.85rem; color: #777; margin-bottom: 0.5rem; margin-top: 0;">Respuesta Correcta:</p>
+            <div id="correct-text" style="color: var(--ieu-orange);"></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 5: PODIO FINAL -->
+    <div id="screen-final" class="screen">
+        <h1 style="text-align: center;">🏆 Clasificación Final 🏆</h1>
+        <div id="podium-container" style="margin-top: 1.5rem; width: 100%;"></div>
+        <button onclick="location.reload()" class="btn-secondary" style="margin-top: 2rem;">Salir</button>
+    </div>
+
+    <!-- ADMIN CONTROLS -->
+    <div id="admin-controls" style="display: none;">
+        <span style="color: #888; font-size: 0.75rem; align-self: center; flex: 0 0 auto;">PROF</span>
+        <button onclick="adminNextPhase()" class="admin-btn primary" id="btn-admin-next">Siguiente ➡️</button>
+        <button onclick="downloadHistoryCSV()" class="admin-btn" style="background: #00695c;">📥 CSV</button>
+        <button onclick="adminResetGame()" class="admin-btn" style="background: #b71c1c;">🔄 Reset</button>
+    </div>
+
+    <script src="../js/exam-tech.js"></script>
+</body>
+
+</html>
