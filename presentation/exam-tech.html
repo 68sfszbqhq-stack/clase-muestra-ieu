@@ -284,6 +284,13 @@
             text-transform: uppercase;
         }
 
+        /* La pantalla final necesita scroll para ver la tarjeta personal */
+        #screen-final {
+            justify-content: flex-start;
+            padding-top: 1.5rem;
+            overflow-y: auto;
+        }
+
         /* Mobile adjustments */
         @media (max-width: 400px) {
             .option-btn { font-size: 0.85rem; padding: 1rem 0.5rem; }
@@ -376,9 +383,15 @@
 
     <!-- PANTALLA 5: PODIO FINAL -->
     <div id="screen-final" class="screen">
-        <h1 style="text-align: center;">🏆 Clasificación Final 🏆</h1>
-        <div id="podium-container" style="margin-top: 1.5rem; width: 100%;"></div>
-        <button onclick="location.reload()" class="btn-secondary" style="margin-top: 2rem;">Salir</button>
+        <h1 style="text-align: center; font-size: 1.6rem;">🏆 Ranking Final 🏆</h1>
+
+        <!-- Ranking completo (todos los alumnos) -->
+        <div id="podium-container" style="margin-top: 1rem; width: 100%;"></div>
+
+        <!-- Tarjeta personal del alumno (aciertos/errores por pregunta) -->
+        <div id="my-results-container" style="width: 100%;"></div>
+
+        <button onclick="location.reload()" class="btn-secondary" style="margin-top: 2rem; margin-bottom: 5rem;">Salir</button>
     </div>
 
     <!-- ADMIN CONTROLS -->

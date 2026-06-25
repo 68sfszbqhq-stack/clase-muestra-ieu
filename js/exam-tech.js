@@ -304,6 +304,10 @@ function syncInterface(state) {
         showScreen('final');
         renderPodium();
 
+        if (!isAdmin && myPlayerId) {
+            renderMyResults();
+        }
+
         if (isAdmin) {
             renderAdminResultsTable();
         }
@@ -515,20 +519,81 @@ function renderChart(qIdx) {
 
 function renderPodium() {
     const pod = document.getElementById('podium-container');
-    pod.innerHTML = '';
+    pod.innerHTML = '<p style="opacity:0.5;font-size:0.9rem;">Cargando ranking...</p>';
 
-    db.ref('players_tech').orderByChild('score').limitToLast(5).once('value', snap => {
+    db.ref('players_tech').orderByChild('score').once('value', snap => {
         const sorted = [];
         snap.forEach(c => sorted.push(c.val()));
         sorted.reverse();
 
+        pod.innerHTML = '';
+        const medals = ['🥇', '🥈', '🥉'];
+
         sorted.forEach((p, i) => {
             const row = document.createElement('div');
-            const bg = i === 0 ? "gold" : (i === 1 ? "silver" : (i === 2 ? "#cd7f32" : "white"));
-            row.style.cssText = `background:${bg};color:${i > 2 ? "#333" : "#000"};padding:1rem;margin:0.5rem 0;border-radius:10px;display:flex;justify-content:space-between;font-size:1.2rem;font-weight:bold;`;
-            row.innerHTML = `<span>#${i + 1} ${p.name}</span><span>${p.score} pts</span>`;
+            const medal = medals[i] ?? `${i + 1}.`;
+            const bg = i === 0 ? '#FFD700' : (i === 1 ? '#C0C0C0' : (i === 2 ? '#CD7F32' : 'rgba(255,255,255,0.08)'));
+            const color = i < 3 ? '#000' : '#fff';
+            const isMe = p.name === myName;
+
+            row.style.cssText = `background:${bg};color:${color};padding:12px 16px;margin:5px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;font-size:1.05rem;font-weight:bold;${isMe ? 'outline:3px solid var(--ieu-orange);' : ''}`;
+            row.innerHTML = `
+                <span>${medal} ${p.name}${isMe ? ' 👈' : ''}</span>
+                <span style="background:var(--ieu-orange);color:white;padding:3px 12px;border-radius:10px;">${p.score} pts</span>
+            `;
             pod.appendChild(row);
         });
+    });
+}
+
+function renderMyResults() {
+    if (!myPlayerId) return;
+    const container = document.getElementById('my-results-container');
+    if (!container) return;
+
+    db.ref(`players_tech/${myPlayerId}`).once('value', snap => {
+        const player = snap.val();
+        if (!player) return;
+
+        const answers = player.answers || {};
+        let correctCount = 0;
+
+        let rows = '';
+        questions.forEach((q, idx) => {
+            const myAns = answers[idx];
+            const answered = myAns !== undefined;
+            const isCorrect = answered && myAns === q.correct;
+            if (isCorrect) correctCount++;
+
+            const icon = !answered ? '—' : (isCorrect ? '✅' : '❌');
+            const bg = !answered ? 'rgba(255,255,255,0.05)' : (isCorrect ? 'rgba(0,200,100,0.15)' : 'rgba(220,50,50,0.15)');
+            const label = !answered ? 'Sin respuesta' : (isCorrect ? 'Correcto' : `Incorrecto · Correcta: ${q.options[q.correct]}`);
+
+            rows += `
+                <div style="background:${bg};padding:10px 14px;border-radius:10px;margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+                    <span style="font-size:1.2rem;flex-shrink:0;">${icon}</span>
+                    <div>
+                        <div style="font-size:0.9rem;font-weight:bold;opacity:0.9;">P${idx + 1}: ${q.q}</div>
+                        <div style="font-size:0.78rem;opacity:0.65;margin-top:2px;">${label}</div>
+                    </div>
+                </div>`;
+        });
+
+        const pct = Math.round((correctCount / questions.length) * 100);
+        const emoji = pct >= 80 ? '🌟' : pct >= 60 ? '👍' : pct >= 40 ? '💪' : '📚';
+
+        container.innerHTML = `
+            <div style="background:rgba(255,255,255,0.06);border-radius:18px;padding:1.4rem;margin-top:1.8rem;width:100%;box-sizing:border-box;">
+                <div style="text-align:center;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size:2.5rem;">${emoji}</div>
+                    <h3 style="margin:0.3rem 0;color:var(--ieu-orange);">${player.name}</h3>
+                    <div style="font-size:2.2rem;font-weight:bold;margin:0.4rem 0;">${correctCount} / ${questions.length}</div>
+                    <div style="font-size:0.9rem;opacity:0.65;">${pct}% de aciertos · ${player.score} puntos</div>
+                </div>
+                <h4 style="margin:0 0 0.8rem;opacity:0.7;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;">Detalle por pregunta</h4>
+                ${rows}
+            </div>
+        `;
     });
 }
 
