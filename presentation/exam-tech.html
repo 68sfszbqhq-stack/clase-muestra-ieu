@@ -351,10 +351,15 @@
 
     <!-- PANTALLA 3: JUEGO -->
     <div id="screen-game" class="screen">
-        <!-- Indicador de progreso -->
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <span id="q-counter" style="font-size: 0.85rem; opacity: 0.7;">1 / 22</span>
-            <span style="font-size: 0.85rem; opacity: 0.7;">💻 Tech Quiz</span>
+        <!-- Temporizador + Contador -->
+        <div style="width: 100%; margin-bottom: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span id="q-counter" style="font-size: 0.85rem; opacity: 0.7;">1 / 22</span>
+                <span id="timer-text" style="font-size: 1.6rem; font-weight: bold; color: var(--ieu-orange); min-width: 2.5rem; text-align: right; transition: color 0.3s;">60</span>
+            </div>
+            <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.12); border-radius: 5px; overflow: hidden;">
+                <div id="timer-bar" style="width: 100%; height: 100%; background: var(--ieu-orange); border-radius: 5px; transition: width 0.2s linear, background 0.5s;"></div>
+            </div>
         </div>
 
         <div class="question-box">
@@ -394,10 +399,32 @@
         <button onclick="location.reload()" class="btn-secondary" style="margin-top: 2rem; margin-bottom: 5rem;">Salir</button>
     </div>
 
+    <!-- PANTALLA: CANCELADO (solo alumnos expulsados) -->
+    <div id="screen-kicked" class="screen">
+        <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">⛔</div>
+            <h2 style="margin: 0 0 0.8rem;">Participación cancelada</h2>
+            <p style="opacity: 0.65; max-width: 280px; margin: 0 auto 2rem;">
+                El profesor canceló tu participación en el examen.
+            </p>
+            <button onclick="location.reload()" class="btn-secondary">Salir</button>
+        </div>
+    </div>
+
+    <!-- ADMIN: Panel de alumnos con botón cancelar (slide-up) -->
+    <div id="admin-students-panel" style="display:none; position:fixed; bottom:62px; left:0; width:100%; background:#111827; border-top:2px solid #374151; max-height:240px; overflow-y:auto; z-index:999; padding:0.8rem 1rem; box-sizing:border-box;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+            <span style="font-size:0.8rem; color:#9ca3af; text-transform:uppercase; letter-spacing:1px;">Alumnos — toca ⛔ para cancelar</span>
+            <button onclick="toggleStudentsPanel()" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:1.1rem;padding:0;">✕</button>
+        </div>
+        <div id="admin-students-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+
     <!-- ADMIN CONTROLS -->
     <div id="admin-controls" style="display: none;">
-        <span style="color: #888; font-size: 0.75rem; align-self: center; flex: 0 0 auto;">PROF</span>
+        <span style="color: #888; font-size: 0.7rem; align-self: center; flex: 0 0 auto;">PROF</span>
         <button onclick="adminNextPhase()" class="admin-btn primary" id="btn-admin-next">Siguiente ➡️</button>
+        <button onclick="toggleStudentsPanel()" class="admin-btn" style="background: #4f46e5;">👥 Alumnos</button>
         <button onclick="downloadHistoryCSV()" class="admin-btn" style="background: #00695c;">📥 CSV</button>
         <button onclick="adminResetGame()" class="admin-btn" style="background: #b71c1c;">🔄 Reset</button>
     </div>

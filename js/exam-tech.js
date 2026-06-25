@@ -11,6 +11,9 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig, "tech-exam");
 const db = firebase.database(app);
 
+const QUESTION_TIME = 60; // segundos por pregunta
+let timerInterval = null;
+
 // --- PREGUNTAS: FUNDAMENTOS DIGITALES ---
 const questions = [
     {
@@ -158,7 +161,8 @@ const screens = {
     lobby: document.getElementById('screen-lobby'),
     game: document.getElementById('screen-game'),
     results: document.getElementById('screen-results'),
-    final: document.getElementById('screen-final')
+    final: document.getElementById('screen-final'),
+    kicked: document.getElementById('screen-kicked')
 };
 
 // --- INIT ---
@@ -203,6 +207,7 @@ document.getElementById('joinForm').addEventListener('submit', (e) => {
         online: true
     });
 
+    setupKickListener();
     showScreen('lobby');
 });
 
@@ -222,7 +227,7 @@ function submitAnswer(optionIdx) {
 
 // --- SYNC ---
 function syncInterface(state) {
-    const { phase, questionIdx, reveal } = state;
+    const { phase, questionIdx, reveal, startTime } = state;
     currentQIdx = questionIdx;
 
     if (isAdmin) {
@@ -230,6 +235,7 @@ function syncInterface(state) {
     }
 
     if (phase === 'lobby') {
+        stopTimer();
         if (!myPlayerId && !isAdmin) {
             showScreen('login');
             return;
@@ -251,7 +257,14 @@ function syncInterface(state) {
                 list.innerHTML = '';
                 snap.forEach(child => {
                     const p = child.val();
-                    list.innerHTML += `<span class="player-badge">${p.name}</span>`;
+                    const id = child.key;
+                    if (p.kicked) return;
+                    list.innerHTML += `
+                        <div class="player-badge" style="display:flex;align-items:center;gap:6px;">
+                            <span>${p.name}</span>
+                            <button onclick="kickPlayer('${id}','${p.name.replace(/'/g, '')}')" title="Cancelar participación"
+                                style="background:#b71c1c;border:none;color:white;border-radius:4px;padding:1px 6px;cursor:pointer;font-size:0.75rem;">✕</button>
+                        </div>`;
                 });
             }
         });
@@ -270,8 +283,10 @@ function syncInterface(state) {
         }
 
         if (reveal) {
+            stopTimer();
             showReveal(questionIdx);
         } else {
+            startTimer(startTime);
             const btns = document.querySelectorAll('.option-btn');
             btns.forEach(b => {
                 b.classList.remove('disabled');
@@ -283,6 +298,7 @@ function syncInterface(state) {
         }
     }
     else if (phase === 'results') {
+        stopTimer();
         showScreen('results');
         renderChart(questionIdx);
 
@@ -365,7 +381,7 @@ function adminNextPhase() {
         let { phase, questionIdx, reveal } = state;
 
         if (phase === 'lobby') {
-            db.ref('gameState_tech').update({ phase: 'question', questionIdx: 0, reveal: false });
+            db.ref('gameState_tech').update({ phase: 'question', questionIdx: 0, reveal: false, startTime: Date.now() });
         }
         else if (phase === 'question') {
             if (!reveal) {
@@ -381,7 +397,7 @@ function adminNextPhase() {
                 db.ref('players_tech').once('value', ps => {
                     ps.forEach(p => p.ref.update({ lastAnswer: -1 }));
                 });
-                db.ref('gameState_tech').update({ phase: 'question', questionIdx: nextIdx, reveal: false });
+                db.ref('gameState_tech').update({ phase: 'question', questionIdx: nextIdx, reveal: false, startTime: Date.now() });
             } else {
                 saveGameHistory();
                 db.ref('gameState_tech').update({ phase: 'final' });
@@ -681,6 +697,118 @@ function downloadHistoryCSV() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    });
+}
+
+// --- TEMPORIZADOR ---
+function startTimer(startTime) {
+    stopTimer();
+    if (!startTime) return;
+
+    const bar = document.getElementById('timer-bar');
+    const txt = document.getElementById('timer-text');
+    let autoRevealDone = false;
+
+    timerInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const remaining = Math.max(0, QUESTION_TIME - elapsed);
+        const pct = (remaining / QUESTION_TIME) * 100;
+        const isUrgent = remaining <= 10;
+
+        if (bar) {
+            bar.style.width = pct + '%';
+            bar.style.background = isUrgent ? '#e21b3c' : 'var(--ieu-orange)';
+        }
+        if (txt) {
+            txt.textContent = Math.ceil(remaining);
+            txt.style.color = isUrgent ? '#e21b3c' : 'var(--ieu-orange)';
+        }
+
+        if (remaining <= 0 && !autoRevealDone) {
+            autoRevealDone = true;
+            stopTimer();
+            // Solo el admin dispara el reveal para evitar duplicados
+            if (isAdmin) {
+                db.ref('gameState_tech').once('value', s => {
+                    const st = s.val();
+                    if (st && st.phase === 'question' && !st.reveal) {
+                        db.ref('gameState_tech').update({ reveal: true });
+                        calculateScores(currentQIdx);
+                    }
+                });
+            }
+        }
+    }, 200);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    const bar = document.getElementById('timer-bar');
+    const txt = document.getElementById('timer-text');
+    if (bar) { bar.style.width = '0%'; bar.style.background = 'var(--ieu-orange)'; }
+    if (txt) { txt.textContent = ''; txt.style.color = 'var(--ieu-orange)'; }
+}
+
+// --- EXPULSAR ALUMNO ---
+function setupKickListener() {
+    if (!myPlayerId || isAdmin) return;
+    db.ref(`players_tech/${myPlayerId}/kicked`).on('value', snap => {
+        if (snap.val() === true) {
+            stopTimer();
+            db.ref('gameState_tech').off();
+            localStorage.removeItem('ieu_playerNameTech');
+            localStorage.removeItem('ieu_playerIdTech');
+            showScreen('kicked');
+        }
+    });
+}
+
+function kickPlayer(playerId, playerName) {
+    if (!confirm(`¿Cancelar la participación de "${playerName}"?\n\nVerá una pantalla de "Participación cancelada".`)) return;
+    db.ref(`players_tech/${playerId}`).update({ kicked: true });
+}
+
+// --- PANEL DE ALUMNOS (ADMIN) ---
+function toggleStudentsPanel() {
+    const panel = document.getElementById('admin-students-panel');
+    const isVisible = panel.style.display !== 'none';
+    panel.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) updateAdminStudentsList();
+}
+
+function updateAdminStudentsList() {
+    db.ref('players_tech').once('value', snap => {
+        const list = document.getElementById('admin-students-list');
+        list.innerHTML = '';
+
+        if (!snap.exists() || snap.numChildren() === 0) {
+            list.innerHTML = '<span style="opacity:0.4;font-size:0.85rem;">Sin alumnos conectados</span>';
+            return;
+        }
+
+        snap.forEach(child => {
+            const p = child.val();
+            const id = child.key;
+            const item = document.createElement('div');
+            item.style.cssText = 'display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);padding:8px 12px;border-radius:10px;';
+
+            if (p.kicked) {
+                item.style.opacity = '0.35';
+                item.innerHTML = `<span style="flex:1;font-size:0.9rem;">⛔ ${p.name} <em style="font-size:0.75rem;">(cancelado)</em></span>`;
+            } else {
+                item.innerHTML = `
+                    <span style="flex:1;font-weight:bold;font-size:0.95rem;">👤 ${p.name}</span>
+                    <span style="background:#1f2937;color:#9ca3af;padding:2px 10px;border-radius:6px;font-size:0.8rem;">${p.score} pts</span>
+                    <button onclick="kickPlayer('${id}','${p.name.replace(/'/g, '')}');updateAdminStudentsList();"
+                        style="background:#b71c1c;border:none;color:white;padding:6px 10px;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:bold;white-space:nowrap;">
+                        ⛔ Cancelar
+                    </button>`;
+            }
+            list.appendChild(item);
+        });
     });
 }
 
