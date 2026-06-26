@@ -13,6 +13,8 @@ const db = firebase.database(app);
 
 const QUESTION_TIME = 60; // segundos por pregunta
 let timerInterval = null;
+let myAnswers = {}; // respuestas locales — evita re-habilitar botones ya contestados
+let answersWatcher = null; // listener Firebase para contar respuestas (admin)
 
 // --- PREGUNTAS: FUNDAMENTOS DIGITALES ---
 const questions = [
@@ -212,13 +214,17 @@ document.getElementById('joinForm').addEventListener('submit', (e) => {
 });
 
 function submitAnswer(optionIdx) {
+    // Ignorar si ya contestó esta pregunta
+    if (myAnswers[currentQIdx] !== undefined) return;
+    myAnswers[currentQIdx] = optionIdx;
+
     const btns = document.querySelectorAll('.option-btn');
     btns.forEach(b => {
         b.classList.add('disabled');
         if (b.dataset.idx == optionIdx) b.classList.add('selected');
     });
 
-    document.getElementById('feedback-msg').textContent = "Respuesta enviada...";
+    document.getElementById('feedback-msg').textContent = "Respuesta enviada ✓";
     playSound('click');
 
     db.ref(`players_tech/${myPlayerId}/lastAnswer`).set(optionIdx);
@@ -284,16 +290,34 @@ function syncInterface(state) {
 
         if (reveal) {
             stopTimer();
+            stopAnswersWatcher();
             showReveal(questionIdx);
         } else {
             startTimer(startTime);
+            if (isAdmin) startAnswersWatcher(questionIdx);
+
+            const alreadyAnswered = !isAdmin && myAnswers[questionIdx] !== undefined;
             const btns = document.querySelectorAll('.option-btn');
             btns.forEach(b => {
-                b.classList.remove('disabled');
-                b.style.opacity = "1";
+                // Restaurar texto de la opción
                 b.innerHTML = questions[questionIdx].options[b.dataset.idx];
+
+                if (alreadyAnswered) {
+                    // Mantener botones bloqueados con la selección original
+                    b.classList.add('disabled');
+                    if (b.dataset.idx == myAnswers[questionIdx]) b.classList.add('selected');
+                } else {
+                    b.classList.remove('disabled');
+                    b.style.opacity = '1';
+                    b.style.border = '';
+                    b.style.transform = '';
+                }
                 if (isAdmin) b.style.pointerEvents = 'none';
             });
+
+            if (alreadyAnswered) {
+                document.getElementById('feedback-msg').textContent = "Respuesta enviada ✓";
+            }
             document.getElementById('correct-answer-reveal').style.display = 'none';
         }
     }
@@ -369,6 +393,8 @@ function adminResetGame(silent = false) {
 
     db.ref('players_tech').remove();
     db.ref('gameState_tech').set({ phase: 'lobby', questionIdx: 0, reveal: false });
+    myAnswers = {};
+    stopAnswersWatcher();
     qrGenerated = false;
     document.getElementById('qr-code').innerHTML = '';
 
@@ -627,7 +653,8 @@ function renderAdminResultsTable() {
     db.ref('players_tech').once('value', snap => {
         let html = `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#333;">
             <thead><tr style="background:var(--ieu-orange);color:white;text-align:left;">
-            <th style="padding:10px;">Alumno</th><th style="padding:10px;">Pts</th>`;
+            <th style="padding:10px;position:sticky;left:0;background:var(--ieu-orange);z-index:2;min-width:110px;">Alumno</th>
+            <th style="padding:10px;white-space:nowrap;">Pts</th>`;
 
         questions.forEach((q, i) => {
             html += `<th style="padding:8px;text-align:center;">P${i + 1}</th>`;
@@ -640,9 +667,10 @@ function renderAdminResultsTable() {
         players.sort((a, b) => b.score - a.score);
 
         players.forEach((p, index) => {
-            html += `<tr style="background:${index % 2 === 0 ? '#f9f9f9' : '#fff'};border-bottom:1px solid #eee;">
-                <td style="padding:10px;font-weight:bold;">${p.name}</td>
-                <td style="padding:10px;">${p.score}</td>`;
+            const rowBg = index % 2 === 0 ? '#f9f9f9' : '#fff';
+            html += `<tr style="background:${rowBg};border-bottom:1px solid #eee;">
+                <td style="padding:10px;font-weight:bold;position:sticky;left:0;background:${rowBg};z-index:1;min-width:110px;">${p.name || '—'}</td>
+                <td style="padding:10px;white-space:nowrap;">${p.score}</td>`;
 
             questions.forEach((q, qIdx) => {
                 let cell = '-', bg = '#eee';
@@ -698,6 +726,45 @@ function downloadHistoryCSV() {
         link.click();
         document.body.removeChild(link);
     });
+}
+
+// --- MONITOR DE RESPUESTAS (ADMIN) ---
+function startAnswersWatcher(questionIdx) {
+    stopAnswersWatcher();
+    const banner = document.getElementById('answers-banner');
+    if (!banner) return;
+
+    answersWatcher = db.ref('players_tech').on('value', snap => {
+        let total = 0, answered = 0;
+        snap.forEach(child => {
+            const p = child.val();
+            if (p.kicked) return;
+            total++;
+            if (p.lastAnswer !== undefined && p.lastAnswer !== -1) answered++;
+        });
+
+        if (total === 0) { banner.style.display = 'none'; return; }
+
+        banner.style.display = 'block';
+        const allDone = answered >= total;
+        banner.style.background = allDone ? '#14532d' : '#1e1b4b';
+        banner.style.borderTopColor = allDone ? '#16a34a' : '#4f46e5';
+        document.getElementById('answers-banner-text').textContent =
+            allDone
+                ? `✅ ¡Todos respondieron! (${answered}/${total}) — presiona Siguiente`
+                : `⏳ ${answered} / ${total} han respondido`;
+
+        if (allDone) playSound('cheer');
+    });
+}
+
+function stopAnswersWatcher() {
+    if (answersWatcher) {
+        db.ref('players_tech').off('value', answersWatcher);
+        answersWatcher = null;
+    }
+    const banner = document.getElementById('answers-banner');
+    if (banner) banner.style.display = 'none';
 }
 
 // --- TEMPORIZADOR ---
