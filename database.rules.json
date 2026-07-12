@@ -1,0 +1,88 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "players": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["score"],
+      "$playerId": {
+        "name": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80" },
+        "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000" },
+        "lastAnswer": { ".validate": "newData.isNumber()" },
+        "online": { ".validate": "newData.isBoolean()" },
+        "answers": {
+          "$q": { ".validate": "newData.isNumber()" }
+        },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "players_tech": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["score"],
+      "$playerId": {
+        "name": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80" },
+        "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000" },
+        "lastAnswer": { ".validate": "newData.isNumber()" },
+        "online": { ".validate": "newData.isBoolean()" },
+        "kicked": { ".validate": "newData.isBoolean()" },
+        "answers": {
+          "$q": { ".validate": "newData.isNumber()" }
+        },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "gameState": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "phase": { ".validate": "newData.isString() && newData.val().length <= 20" },
+      "questionIdx": { ".validate": "newData.isNumber()" },
+      "reveal": { ".validate": "newData.isBoolean()" },
+      "startTime": { ".validate": "newData.isNumber()" },
+      "$other": { ".validate": false }
+    },
+
+    "gameState_tech": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "phase": { ".validate": "newData.isString() && newData.val().length <= 20" },
+      "questionIdx": { ".validate": "newData.isNumber()" },
+      "reveal": { ".validate": "newData.isBoolean()" },
+      "startTime": { ".validate": "newData.isNumber()" },
+      "$other": { ".validate": false }
+    },
+
+    "history": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "sessions": {
+        "$sessionId": {
+          "timestamp": { ".validate": "newData.isNumber()" },
+          "date": { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "totalQuestions": { ".validate": "newData.isNumber()" }
+        }
+      }
+    },
+
+    "history_tech": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "sessions": {
+        "$sessionId": {
+          "timestamp": { ".validate": "newData.isNumber()" },
+          "date": { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "totalQuestions": { ".validate": "newData.isNumber()" }
+        }
+      }
+    },
+
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

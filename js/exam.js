@@ -12,6 +12,19 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// --- AUTENTICACIÓN ANÓNIMA ---
+// Cada dispositivo obtiene un token automáticamente; el alumno NO ve ningún login.
+// Las reglas de la base de datos exigen este token para poder leer/escribir.
+const whenAuthReady = new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) resolve(user);
+    });
+});
+firebase.auth().signInAnonymously().catch((err) => {
+    console.error("Error de autenticación anónima:", err);
+    alert("No se pudo conectar de forma segura con el servidor.\nRevisa tu conexión y recarga la página.");
+});
+
 // --- GAME DATA ---
 const questions = [
     {
@@ -98,10 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('playerName').value = myName;
     }
 
-    // LISTENER GLOBAL DE ESTADO DE JUEGO
-    db.ref('gameState').on('value', (snapshot) => {
-        const state = snapshot.val() || { phase: 'login', questionIdx: 0 };
-        syncInterface(state);
+    // LISTENER GLOBAL DE ESTADO DE JUEGO (espera al token anónimo)
+    whenAuthReady.then(() => {
+        db.ref('gameState').on('value', (snapshot) => {
+            const state = snapshot.val() || { phase: 'login', questionIdx: 0 };
+            syncInterface(state);
+        });
     });
 });
 
@@ -382,9 +397,11 @@ function enableAdminMode() {
     showScreen('lobby');
     document.getElementById('admin-controls').style.display = 'flex';
 
-    // Initial State Check -> if null, set lobby
-    db.ref('gameState').once('value', s => {
-        if (!s.exists()) adminResetGame();
+    // Initial State Check -> if null, set lobby (espera al token anónimo)
+    whenAuthReady.then(() => {
+        db.ref('gameState').once('value', s => {
+            if (!s.exists()) adminResetGame();
+        });
     });
 }
 
@@ -403,14 +420,16 @@ function adminResetGame() {
 
 // Add logout sanity check on load
 if (localStorage.getItem('ieu_playerName')) {
-    // Check if player still exists in DB, otherwise logout
+    // Check if player still exists in DB, otherwise logout (espera al token anónimo)
     if (myPlayerId) {
-        db.ref(`players/${myPlayerId}`).once('value', s => {
-            if (!s.exists()) {
-                localStorage.removeItem('ieu_playerName');
-                localStorage.removeItem('ieu_playerId');
-                location.reload();
-            }
+        whenAuthReady.then(() => {
+            db.ref(`players/${myPlayerId}`).once('value', s => {
+                if (!s.exists()) {
+                    localStorage.removeItem('ieu_playerName');
+                    localStorage.removeItem('ieu_playerId');
+                    location.reload();
+                }
+            });
         });
     }
 }

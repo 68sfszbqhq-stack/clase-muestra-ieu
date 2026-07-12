@@ -10,6 +10,20 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig, "tech-exam");
 const db = firebase.database(app);
+const auth = firebase.auth(app);
+
+// --- AUTENTICACIÓN ANÓNIMA ---
+// Cada dispositivo obtiene un token automáticamente; el alumno NO ve ningún login.
+// Las reglas de la base de datos exigen este token para poder leer/escribir.
+const whenAuthReady = new Promise((resolve) => {
+    auth.onAuthStateChanged((user) => {
+        if (user) resolve(user);
+    });
+});
+auth.signInAnonymously().catch((err) => {
+    console.error("Error de autenticación anónima:", err);
+    alert("No se pudo conectar de forma segura con el servidor.\nRevisa tu conexión y recarga la página.");
+});
 
 const QUESTION_TIME = 60; // segundos por pregunta
 let timerInterval = null;
@@ -178,9 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('playerName').value = myName;
     }
 
-    db.ref('gameState_tech').on('value', (snapshot) => {
-        const state = snapshot.val() || { phase: 'lobby', questionIdx: 0 };
-        syncInterface(state);
+    whenAuthReady.then(() => {
+        db.ref('gameState_tech').on('value', (snapshot) => {
+            const state = snapshot.val() || { phase: 'lobby', questionIdx: 0 };
+            syncInterface(state);
+        });
     });
 });
 
@@ -383,8 +399,10 @@ function enableAdminMode() {
     showScreen('lobby');
     document.getElementById('admin-controls').style.display = 'flex';
 
-    db.ref('gameState_tech').once('value', s => {
-        if (!s.exists()) adminResetGame(true);
+    whenAuthReady.then(() => {
+        db.ref('gameState_tech').once('value', s => {
+            if (!s.exists()) adminResetGame(true);
+        });
     });
 }
 
@@ -894,11 +912,13 @@ function playSound(type) {
 
 // Auto-logout si el jugador fue borrado (reset)
 if (localStorage.getItem('ieu_playerNameTech') && myPlayerId) {
-    db.ref(`players_tech/${myPlayerId}`).once('value', s => {
-        if (!s.exists()) {
-            localStorage.removeItem('ieu_playerNameTech');
-            localStorage.removeItem('ieu_playerIdTech');
-            location.reload();
-        }
+    whenAuthReady.then(() => {
+        db.ref(`players_tech/${myPlayerId}`).once('value', s => {
+            if (!s.exists()) {
+                localStorage.removeItem('ieu_playerNameTech');
+                localStorage.removeItem('ieu_playerIdTech');
+                location.reload();
+            }
+        });
     });
 }
